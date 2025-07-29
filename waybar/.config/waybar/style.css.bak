@@ -7,8 +7,11 @@
   border: none;
   border-radius: 0;
   min-height: 0;
-  font-family: CaskaydiaMono Nerd Font Propo;
+  /* font-family: CaskaydiaMono Nerd Font Propo; */
+  /* font-family: JetBrains Nerd Font Propo; */
+  font-family: JetBrainsMono Nerd Font Propo;
   font-size: 12px;
+  font-weight: bold;
 }
 
 .modules-left {
@@ -20,10 +23,25 @@
 }
 
 #workspaces button {
-  all: initial;
+  /* all: initial; */
   padding: 0 6px;
   margin: 0 1.5px;
   min-width: 9px;
+}
+
+#workspaces button.active {
+    color: #7C2111;
+    background-color: rgba(0,0,0,0.0);
+}
+
+#workspaces button.active label {
+    color: #7C2111; /* More specific selector for text */
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    color: #7C2111;
+    background-color: rgba(0,0,0,0.0);
 }
 
 #tray,
