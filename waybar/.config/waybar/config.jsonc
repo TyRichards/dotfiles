@@ -3,7 +3,7 @@
   "layer": "top",
   "position": "top",
   "spacing": 0,
-  "height": 35,
+  "height": 26,
   "modules-left": [
     "hyprland/workspaces"
   ],
@@ -15,26 +15,25 @@
     "bluetooth",
     "network",
     "pulseaudio",
-    // "custom/wl-gammarelay-temperature",
-    // "custom/wl-gammarelay-brightness",
     "cpu",
     "battery",
-    "clock"
+    "clock",
+    "custom/update"
   ],
   "hyprland/workspaces": {
     "on-click": "activate",
     "format": "{icon}",
     "format-icons": {
       "default": "",
-        "1": "一",
-        "2": "二",
-        "3": "三",
-        "4": "四",
-        "5": "五",
-        "6": "六",
-        "7": "七",
-        "8": "八",
-        "9": "九",
+      "1": "一",
+      "2": "二",
+      "3": "三",
+      "4": "四",
+      "5": "五",
+      "6": "六",
+      "7": "七",
+      "8": "八",
+      "9": "九"
       // "active": ""
     },
     "persistent-workspaces": {
@@ -44,6 +43,12 @@
       "4": [],
       "5": []
     }
+  },
+  "custom/update": {
+    "format": "",
+    "exec": "~/.local/share/omarchy/bin/omarchy-update-available",
+    "on-click": "alacritty --class Omarchy --title Omarchy -e omarchy-update",
+    "interval": 3600
   },
   "cpu": {
     "interval": 5,
@@ -108,19 +113,6 @@
     "format-icons": {
       "default": ["", "", ""]
     }
-  },
-  "custom/wl-gammarelay-temperature": {
-    "format": "",
-    "exec": "wl-gammarelay --subscribe Temperature",
-    "on-scroll-up": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +100",
-    "on-scroll-down": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -100"
-  },
-  "custom/wl-gammarelay-brightness": {
-    // "format": "{} ",
-    "format": "",
-    "exec": "wl-gammarelay --subscribe Brightness",
-    "on-scroll-up": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateBrightness d +0.02",
-    "on-scroll-down": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateBrightness d -0.02"
   },
   "group/tray-expander": {
     "orientation": "inherit",
