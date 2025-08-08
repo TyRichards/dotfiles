@@ -1,0 +1,236 @@
+# Learn how to configure Hyprland: https://wiki.hyprland.org/Configuring/
+
+# You're encouraged to tailor your Hyprland config in this file by adding or overwriting any settings.
+# But don't change anything that lives in ~/.local/share/omarchy, if you can help it!
+# Those files are overwritten when Omarchy is updated.
+
+# Change your personal monitor setup in here to keep the main config portable
+source = ~/.config/hypr/monitors.conf
+
+# Use defaults Omarchy defaults
+source = ~/.local/share/omarchy/default/hypr/autostart.conf
+source = ~/.local/share/omarchy/default/hypr/bindings/media.conf
+source = ~/.local/share/omarchy/default/hypr/bindings/tiling.conf
+source = ~/.local/share/omarchy/default/hypr/bindings/utilities.conf
+source = ~/.local/share/omarchy/default/hypr/envs.conf
+source = ~/.local/share/omarchy/default/hypr/looknfeel.conf
+source = ~/.local/share/omarchy/default/hypr/input.conf
+source = ~/.local/share/omarchy/default/hypr/windows.conf
+source = ~/.config/omarchy/current/theme/hyprland.conf
+
+# Application bindings
+$terminal = uwsm app -- alacritty
+$browser = uwsm app -- brave --new-window --ozone-platform=wayland
+$webapp = $browser --app
+
+# Default applications
+$fileManager = nautilus --new-window
+$music = spotify
+$passwordManager = bitwarden-desktop
+$messenger = signal-desktop
+$webapp = $browser --app
+
+# Extra autostart processes (uncomment to run Dropbox)
+# exec-once = waybar &
+exec-once = hyprsunset
+exec-once = dropbox start
+exec-once = toshy-config-start
+exec-once = uwsm app -- my-service
+# exec-once = brave --enable-features=UseOzonePlatform --ozone-platform=wayland
+exec-once = QT_QPA_PLATFORMTHEME=qt5ct
+
+# Cursor Size 
+env = XCURSOR_THEME,Adwaita
+env = XCURSOR_SIZE,18
+env = HYPRCURSOR_SIZE,18
+
+# Force all apps to use Wayland
+# env = GDK_BACKEND,wayland
+env = QT_QPA_PLATFORMTHEME,qt5ct
+env = QT_QPA_PLATFORM,wayland
+env = QT_STYLE_OVERRIDE,''
+# env = SDL_VIDEODRIVER,wayland
+# env = MOZ_ENABLE_WAYLAND,1
+# env = ELECTRON_OZONE_PLATFORM_HINT,wayland
+# env = OZONE_PLATFORM,wayland
+
+# Extra bindings (overwrite existing binding with: unbind = SUPER, O)
+bind = ALT, A, exec, $webapp="https://grok.com"
+bind = ALT SHIFT, A, exec, $webapp="https://chatgpt.com"
+bind = ALT, C, exec, $webapp="https://app.hey.com/calendar/weeks/"
+bind = ALT, E, exec, $webapp="https://app.hey.com"
+bind = ALT, Y, exec, $webapp="https://youtube.com/"
+bind = ALT SUPER, G, exec, $webapp="https://web.whatsapp.com/"
+bind = ALT CONTROL, G, exec, $webapp="https://messages.google.com/web/conversations"
+bind = ALT, X, exec, $webapp="https://x.com/"
+bind = ALT SHIFT, X, exec, $webapp="https://x.com/compose/post"
+bind = ALT, R, exec, $webapp="https://3.basecamp.com/5973641/"
+bind = ALT SHIFT, R, exec, $webapp="https://app.ninety.io/todos/team"
+
+# Start default apps - Ty custom overrides
+bind = ALT, return, exec, $terminal
+bind = ALT, F, exec, $fileManager
+bind = ALT SHIFT, F, exec, $terminal -e yazi 
+bind = ALT, B, exec, $browser
+bind = ALT, M, exec, $terminal -e mocp
+bind = ALT, N, exec, $terminal -e nvim
+bind = ALT, T, exec, $terminal -e btop
+bind = ALT, D, exec, $terminal -e lazydocker
+bind = ALT, G, exec, $messenger
+bind = ALT, O, exec, uwsm app -- obsidian -disable-gpu
+bind = ALT, slash, exec, $passwordManager
+
+# bind = ALT, space, exec, pkill wofi || wofi --show drun --sort-order=alphabetical --style="$HOME/.local/share/omarchy/default/wofi/search.css"
+
+bind = ALT SHIFT, SPACE, exec, pkill -SIGUSR1 waybar
+bind = ALT CTRL, SPACE, exec, ~/.local/share/omarchy/bin/swaybg-next
+bind = ALT SHIFT CTRL, SPACE, exec, ~/.local/share/omarchy/bin/omarchy-theme-next
+bind = ALT, K, exec, ~/.local/share/omarchy/bin/omarchy-show-keybindings
+
+# Notifications
+bind = ALT, comma, exec, makoctl dismiss
+bind = ALT SHIFT, comma, exec, makoctl dismiss --all
+bind = ALT CTRL, comma, exec, makoctl mode -t do-not-disturb && makoctl mode | grep -q 'do-not-disturb' && notify-send "Silenced notifications" || notify-send "Enabled notifications"
+
+bind = ALT, W, killactive,
+
+# Power menu controls lock, suspend, relaunch, restart, shutdown
+bind = ALT, ESCAPE, exec, ~/.local/share/omarchy/bin/omarchy-power-menu
+
+# Toggle idling
+bind = ALT CTRL, I, exec, ~/.local/share/omarchy/bin/omarchy-toggle-idle
+
+# Control tiling
+bind = ALT, J, togglesplit, # dwindle
+bind = ALT, P, pseudo, # dwindle
+bind = ALT, V, togglefloating,
+
+# Move focus with mainMod + arrow keys
+# unbind = SUPER, left
+# bind = SUPER, left, movefocus, l
+# unbind = SUPER, right
+# bind = SUPER, right, movefocus, r
+# unbind = SUPER, up
+# bind = SUPER, up, movefocus, u
+# unbind = SUPER, down
+# bind = SUPER, down, movefocus, d
+
+# Switch workspaces with mainMod + [0-9]
+bind = ALT, code:10, workspace, 1
+bind = ALT, code:11, workspace, 2
+bind = ALT, code:12, workspace, 3
+bind = ALT, code:13, workspace, 4
+bind = ALT, code:14, workspace, 5
+bind = ALT, code:15, workspace, 6
+bind = ALT, code:16, workspace, 7
+bind = ALT, code:17, workspace, 8
+bind = ALT, code:18, workspace, 9
+bind = ALT, code:19, workspace, 10
+
+# Move active window to a workspace with mainMod + SHIFT + [0-9]
+bind = ALT SHIFT, code:10, movetoworkspace, 1
+bind = ALT SHIFT, code:11, movetoworkspace, 2
+bind = ALT SHIFT, code:12, movetoworkspace, 3
+bind = ALT SHIFT, code:13, movetoworkspace, 4
+bind = ALT SHIFT, code:14, movetoworkspace, 5
+bind = ALT SHIFT, code:15, movetoworkspace, 6
+bind = ALT SHIFT, code:16, movetoworkspace, 7
+bind = ALT SHIFT, code:17, movetoworkspace, 8
+bind = ALT SHIFT, code:18, movetoworkspace, 9
+bind = ALT SHIFT, code:19, movetoworkspace, 10
+
+# Swap active window with the one next to it with mainMod + SHIFT + arrow keys
+bind = CONTROL SHIFT, left, swapwindow, l
+bind = CONTROL SHIFT, right, swapwindow, r
+bind = CONTROL SHIFT, up, swapwindow, u
+bind = CONTROL SHIFT, down, swapwindow, d
+
+# Switch between latest workspaces
+bind = ALT, Tab, workspace, previous
+
+# Cycle through applications on active workspace
+bindd = ALT, Grave, Cycle to next window, cyclenext
+bindd = ALT, Grave, Reveal active window on top, bringactivetotop
+
+# Resize active window
+bind = ALT, minus, resizeactive, -50 0
+bind = ALT, equal, resizeactive, 50 0
+bind = ALT SHIFT, minus, resizeactive, 0 -50
+bind = ALT SHIFT, equal, resizeactive, 0 50
+
+# Scroll through existing workspaces with mainMod + scroll
+bind = ALT, mouse_down, workspace, e+1
+bind = ALT, mouse_up, workspace, e-1
+
+# Move/resize windows with mainMod + LMB/RMB and dragging
+bindm = ALT, mouse:272, movewindow
+bindm = ALT, mouse:273, resizewindow
+
+# Launching
+bind = ALT, space, exec, walker
+bind = ALT, K, exec, ~/.local/share/omarchy/bin/omarchy-menu-keybindings
+
+# Power menu controls lock, suspend, relaunch, restart, shutdown
+bind = ALT, ESCAPE, exec, ~/.local/share/omarchy/bin/omarchy-menu-power
+
+# Toggle nightlight
+bindd = ALT SHIFT, N, Toggle nightlight, exec, ~/.local/share/omarchy/bin/omarchy-toggle-nightlight
+
+### End of Custome Binding Overrides ###############
+
+# Extra autostart processes
+# exec-once = uwsm app -- my-service
+
+# Extra env variables
+# Note: You must relaunch Hyprland after changing envs (use Super+Esc, then Relaunch)
+# env = MY_GLOBAL_ENV,setting
+
+# Control your input devices
+# See https://wiki.hypr.land/Configuring/Variables/#input
+input {
+  # Use multiple keyboard layouts and switch between them with Alt + Space
+  # kb_layout = us,dk
+  # kb_options = compose:caps,grp:alt_space_toggle
+  kb_options = compose:ralt
+
+  # Change speed of keyboard repeat
+  repeat_rate = 40
+  repeat_delay = 600
+
+  # Increase sensitity for mouse/trackpack (default: 0)
+  # sensitivity = 0.35
+
+  touchpad {
+    # Use natural (inverse) scrolling
+    natural_scroll = true
+
+    # Use two-finger clicks for right-click instead of lower-right corner
+    clickfinger_behavior = true
+
+    # Control the speed of your scrolling
+    scroll_factor = 0.1
+  }
+}
+
+# Scroll faster in the terminal
+windowrule = scrolltouchpad 1.5, class:Alacritty
+
+# Window Style
+# decoration {
+
+  # shadow {
+        # enabled = true
+        # range = 2
+        # render_power = 3
+        #color = rgba(1a1a1aee)
+  # }
+
+  # https://wiki.hyprland.org/Configuring/Variables/#blur
+  # blur {
+    # enabled = true
+    # size = 8
+    # passes = 1
+
+    # vibrancy = 0.1696
+  # }
+# }
