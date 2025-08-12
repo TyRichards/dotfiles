@@ -9,8 +9,7 @@
     "hyprland/workspaces"
   ],
   "modules-center": [
-    "clock",
-    "custom/update"
+
   ],
   "modules-right": [
     "group/tray-expander",
@@ -18,23 +17,25 @@
     "network",
     "pulseaudio",
     "cpu",
-    "battery"
+    "battery",
+    "clock",
+    "custom/update"
   ],
   "hyprland/workspaces": {
     "on-click": "activate",
     "format": "{icon}",
     "format-icons": {
-      "default": "",
-      "1": "1",
-      "2": "2",
-      "3": "3",
-      "4": "4",
-      "5": "5",
-      "6": "6",
-      "7": "7",
-      "8": "8",
-      "9": "9",
-      "active": "󱓻"
+      // "default": "",
+        "1": "一",
+        "2": "二",
+        "3": "三",
+        "4": "四",
+        "5": "五",
+        "6": "六",
+        "7": "七",
+        "8": "八",
+        "9": "九",
+      // "active": ""
     },
     "persistent-workspaces": {
       "1": [],
@@ -45,9 +46,9 @@
     }
   },
   "custom/omarchy": {
-    "format": "",
+    "format": "",
     "on-click": "~/.local/share/omarchy/bin/omarchy-menu",
-    "tooltip-format": "SUPER + ALT + SPACE"
+    "tooltip-format": "Omarchy Menu\n\nSuper + Alt + Space"
   },
   "custom/update": {
     "format": "",
@@ -61,8 +62,8 @@
     "on-click": "alacritty -e btop"
   },
   "clock": {
-    "format": "{:%A %H:%M}",
-    "format-alt": "{:%d %B W%V %Y}",
+    "format": "{:%I:%M %p}",
+    "format-alt": "{:%A %B %d}",
     "tooltip": false,
     "on-click-right": "~/.local/share/omarchy/bin/omarchy-cmd-tzupdate"
   },
@@ -131,7 +132,7 @@
     ]
   },
   "custom/expand-icon": {
-    "format": " ",
+    "format": "",
     "tooltip": false
   },
   "tray": {
