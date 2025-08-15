@@ -14,10 +14,10 @@ italic = { family = "JetBrainsMono Nerd Font" }
 size = 8
 
 [window]
-padding.x = 14
-padding.y = 14
-decorations = "None"
-opacity = 0.98
+# padding.x = 14
+# padding.y = 14
+# decorations = "None"
+# opacity = 0.98
 
 [keyboard]
 bindings = [

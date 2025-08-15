@@ -10,6 +10,7 @@ alias pull='git pull'
 #dotfile shortcuts
 alias dot='cd ~/dotfiles/'
 alias dot-bindings='n ~/dotfiles/hyprland/.config/hypr/bindings.conf'
+alias dot-input='n ~/dotfiles/hyprland/.config/hypr/input.conf'
 alias dot-hyprland='n ~/dotfiles/hyprland/.config/hypr/hyprland.conf'
 alias dot-alacritty='n ~/dotfiles/alacritty/.config/alacritty/alacritty.toml'
 alias dot-waybar='n ~/dotfiles/waybar/.config/waybar/config.jsonc'
@@ -20,6 +21,7 @@ alias dot-gtk='nwg-look' # OR n ~/.config/gtk-3.0/settings.ini
 #themes
 alias theme='cd ~/.config/omarchy/themes/'
 alias theme-space-monkey='cd ~/.config/omarchy/themes/space-monkey/'
+alias theme-felix='cd ~/.config/omarchy/themes/felix/'
 
 export PATH="$PATH:/var/lib/snapd/snap/bin"
 export PATH="$HOME/.local/bin:$PATH"
