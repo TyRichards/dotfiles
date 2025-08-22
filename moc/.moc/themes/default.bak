@@ -1,0 +1,18 @@
+# MOC Custom Theme
+background = black
+frame = white
+window_title = white
+selected = white
+selected_background = dark_grey
+playing = yellow
+playing_background = black
+state = cyan
+title = white
+directory = blue
+file = white
+playlist = white
+status = green
+error = red
+info = cyan
+time = yellow
+total_time = yellow

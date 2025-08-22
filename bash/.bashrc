@@ -17,6 +17,8 @@ alias dot-waybar='n ~/dotfiles/waybar/.config/waybar/config.jsonc'
 alias dot-waybar-style='n ~/dotfiles/waybar/.config/waybar/style.css'
 alias dot-bash='n ~/dotfiles/bash/.bashrc'
 alias dot-gtk='nwg-look' # OR n ~/.config/gtk-3.0/settings.ini
+alias dot-moc-theme='cd ~/dotfiles/moc-themes/moc/themes/'
+alias dot-moc='n ~/dotfiles/moc/.moc/config'
 
 #themes
 alias theme='cd ~/.config/omarchy/themes/'
