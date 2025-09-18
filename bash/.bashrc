@@ -21,6 +21,7 @@ alias dot-gtk='nwg-look' # OR n ~/.config/gtk-3.0/settings.ini
 alias dot-rmpc='n ~/dotfiles/rmpc/.config/rmpc/config.ron'
 alias dot-mpd='n ~/dotfiles/mpd/.config/mpd/mpd.conf'
 alias dot-nvim='n ~/dotfiles/nvim/.config/nvim/'
+alias dot-hyprlock='n ~/dotfiles/hyprland/.config/hypr/hyprlock.conf'
 
 #themes
 alias theme='cd ~/.config/omarchy/themes/'

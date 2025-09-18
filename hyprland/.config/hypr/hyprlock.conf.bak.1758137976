@@ -2,9 +2,8 @@ source = ~/.config/omarchy/current/theme/hyprlock.conf
 
 background {
     monitor =
+    path = $HOME/.config/omarchy/current/background   # only png supported for now
     color = $color
-    path = ~/.config/omarchy/current/background
-    # blur_passes = 3
 }
 
 animations {
@@ -37,7 +36,6 @@ input-field {
 auth {
     fingerprint:enabled = true
 }
-
 
 # Custom Elements #######################################
 
