@@ -7,7 +7,7 @@ alias commit='git commit -am'
 alias push='git push'
 alias pull='git pull'
 
-#dotfile shortcuts
+# dotfile shortcuts
 alias dot='cd ~/dotfiles/'
 alias dot-bindings='n ~/dotfiles/hyprland/.config/hypr/bindings.conf'
 alias dot-input='n ~/dotfiles/hyprland/.config/hypr/input.conf'
@@ -23,11 +23,23 @@ alias dot-mpd='n ~/dotfiles/mpd/.config/mpd/mpd.conf'
 alias dot-nvim='n ~/dotfiles/nvim/.config/nvim/'
 alias dot-hyprlock='n ~/dotfiles/hyprland/.config/hypr/hyprlock.conf'
 
-#themes
+# Omarchy Themes
 alias theme='cd ~/.config/omarchy/themes/'
 alias theme-space-monkey='cd ~/.config/omarchy/themes/space-monkey/'
 alias theme-felix='cd ~/.config/omarchy/themes/felix/'
 alias theme-super-game-bro='cd ~/.config/omarchy/themes/super-game-bro/'
+
+# SSH WP Engine Websites
+alias ssh-fl='ssh fuellogicweb@fuellogicweb.ssh.wpengine.net'
+alias ssh-fl-dev='ssh fuellogicdev@fuellogicdev.ssh.wpengine.net'
+alias ssh-rh='ssh rhinofuel@rhinofuel.ssh.wpengine.net'
+alias ssh-rh-dev='ssh rhinofueldevel@.ssh.wpengine.net'
+alias ssh-fc='ssh fuelcoreprod@fuelcoreprod.ssh.wpengine.net'
+alias ssh-fc-dev='ssh devfuelcore@devfuelcore.ssh.wpengine.net'
+alias ssh-tf='ssh tecfuel@tecfuel.ssh.wpengine.net'
+alias ssh-tf-dev='ssh tecfueldev@tecfueldev.ssh.wpengine.net'
+alias ssh-fm='ssh fuelmonkey@fuelmonkey.ssh.wpengine.net'
+# alias ssh-fm-dev='ssh fuelmonkeydev@fuelmonkeydev.ssh.wpengine.net'
 
 export PATH="$PATH:/var/lib/snapd/snap/bin"
 export PATH="$HOME/.local/bin:$PATH"
