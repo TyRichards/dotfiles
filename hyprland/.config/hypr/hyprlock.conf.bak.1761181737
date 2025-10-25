@@ -4,7 +4,7 @@ background {
     monitor =
     color = $color
     path = ~/.config/omarchy/current/background
-    # blur_passes = 1
+    # blur_passes = 3
 }
 
 animations {
@@ -37,6 +37,7 @@ input-field {
 auth {
     fingerprint:enabled = true
 }
+
 
 # Custom Elements #######################################
 
