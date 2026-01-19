@@ -41,6 +41,8 @@ alias ssh-tf-dev='ssh tecfueldev@tecfueldev.ssh.wpengine.net'
 alias ssh-fm='ssh fuelmonkey@fuelmonkey.ssh.wpengine.net'
 # alias ssh-fm-dev='ssh fuelmonkeydev@fuelmonkeydev.ssh.wpengine.net'
 
+alias update-shuffle='python /usr/bin/ipod-shuffle-4g /run/media/trr/TYPOD/ --track-voiceover' 
+
 export PATH="$PATH:/var/lib/snapd/snap/bin"
 export PATH="$HOME/.local/bin:$PATH"
 export XDG_SESSION_TYPE=wayland
