@@ -8,7 +8,7 @@
   border-radius: 0;
   min-height: 0;
   font-family: 'JetBrainsMono Nerd Font';
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .modules-left {
@@ -23,7 +23,9 @@
   all: initial;
   padding: 0 6px;
   margin: 0 1.5px;
-  min-width: 9px;
+  min-width: 8px;
+  font-size: 8px;
+  font-weight: bold;
 }
 
 #workspaces button.empty {

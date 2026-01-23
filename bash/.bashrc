@@ -1,3 +1,6 @@
+# If not running interactively, don't do anything (leave this at the top of this file)
+[[ $- != *i* ]] && return
+
 source ~/.local/share/omarchy/default/bash/rc
 
 # git shortcuts
@@ -39,9 +42,22 @@ alias ssh-fc-dev='ssh devfuelcore@devfuelcore.ssh.wpengine.net'
 alias ssh-tf='ssh tecfuel@tecfuel.ssh.wpengine.net'
 alias ssh-tf-dev='ssh tecfueldev@tecfueldev.ssh.wpengine.net'
 alias ssh-fm='ssh fuelmonkey@fuelmonkey.ssh.wpengine.net'
+alias ssh-ty='ssh tyrichards@tyrichards.ssh.wpengine.net'
 # alias ssh-fm-dev='ssh fuelmonkeydev@fuelmonkeydev.ssh.wpengine.net'
 
-alias update-shuffle='python /usr/bin/ipod-shuffle-4g /run/media/trr/TYPOD/ --track-voiceover' 
+# Music Management
+alias update-shuffle='python /usr/bin/ipod-shuffle-4g /run/media/trr/TYPOD/ --track-voiceover'
+
+download() {
+    yt-dlp -x \
+        --audio-format mp3 \
+        --audio-quality 0 \
+        --embed-thumbnail \
+        --embed-metadata \
+        --parse-metadata "playlist_index:%(track_number)s" \
+        -o "%(playlist_index)02d %(title)s.%(ext)s" \
+        "$@"
+}
 
 export PATH="$PATH:/var/lib/snapd/snap/bin"
 export PATH="$HOME/.local/bin:$PATH"
