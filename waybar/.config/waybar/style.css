@@ -1,29 +1,49 @@
 @import "../omarchy/current/theme/waybar.css";
 
 * {
-  background-color: @background;
+  background-color: transparent;
   color: @foreground;
 
   border: none;
   border-radius: 0;
   min-height: 0;
-  padding-top: 1px;
-  padding-bottom: 1px;
   font-family: 'jetbrainsmono nerd font';
+}
+
+window#waybar > box {
+  background-color: @background;
+  /* margin-top: 20px; */
+  /* padding-top: 20px; */
+  /* border-radius: 8px; */
+  /* padding-bottom: 0; */
+  /* padding-top: 10px; */
+}
+
+.modules-left {
+  margin-left: 18px;
+  font-size: 14px;
+}
+
+.modules-right {
+  margin-right: 18px;
+  font-size: 15px;
+}
+
+.modules-center {
   font-size: 15px;
 }
 
 #workspaces button {
   all: initial;
-  padding: 0 6px;
+  padding: 0 6px 2px 6px;
   margin: 0 4px;
   min-width: 8px;
-  font-size: 7px;
+  font-size: 14px;
   font-weight: normal;
 }
 
 #workspaces button.empty {
-  opacity: 0.5;
+  opacity: 0.35;
 }
 
 #custom-omarchy {
@@ -31,39 +51,18 @@
   margin-right: 12px;
 }
 
+
+#battery,
+#pulseaudio,
+#cpu,
+tray,
+#bluetooth,
+#network,
+#custom-expand-icon,
 #custom-screenrecording-indicator,
 #custom-update {
   min-width: 12px;
-  margin: 0 14px;
-}
-
-#battery {
-  margin-left: 10px;
-  margin-right: 14px;
-}
-
-#pulseaudio {
-  margin-right: 28px;
-}
-
-#cpu {
-  margin-right: 12px;
-}
-
-#tray {
-  margin-right: 16px;
-}
-
-#bluetooth {
-  margin-right: 26px;
-}
-
-#network {
-  margin-right: 30px;
-}
-
-#custom-expand-icon {
-  margin-right: 26px;
+  margin: 0 13px;
 }
 
 tooltip {
@@ -75,7 +74,7 @@ tooltip {
 }
 
 #clock {
-  margin-left: 11px;
+  margin-left: 14px;
 }
 
 .hidden {

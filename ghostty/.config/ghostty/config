@@ -7,8 +7,8 @@ font-style = Regular
 font-size = 9
 
 # Window
-window-padding-x = 40
-window-padding-y = 30
+window-padding-x = 20
+window-padding-y = 10
 confirm-close-surface=false
 resize-overlay = never
 
