@@ -27,12 +27,19 @@ alias dot-rmpc='n ~/dotfiles/rmpc/.config/rmpc/config.ron'
 alias dot-mpd='n ~/dotfiles/mpd/.config/mpd/mpd.conf'
 alias dot-nvim='n ~/dotfiles/nvim/.config/nvim/'
 alias dot-hyprlock='n ~/dotfiles/hyprland/.config/hypr/hyprlock.conf'
+alias dot-tmux='n ~/dotfiles/tmux/.config/tmux/tmux.conf'
 
 # Omarchy Themes
 alias theme='cd ~/.config/omarchy/themes/'
 alias theme-space-monkey='cd ~/.config/omarchy/themes/space-monkey/'
 alias theme-felix='cd ~/.config/omarchy/themes/felix/'
 alias theme-super-game-bro='cd ~/.config/omarchy/themes/super-game-bro/'
+
+# SSH to Machines
+alias ssh-claw='ssh claw@beelink.tail6c9375.ts.net'
+claw() {
+    ssh -t claw@beelink.tail6c9375.ts.net "export PATH='/home/claw/.local/share/mise/installs/node/25.8.0/bin:/home/claw/.local/share/omarchy/bin:/home/claw/.local/share/mise/shims:/home/claw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin'; openclaw tui"
+}
 
 # SSH WP Engine Websites
 alias ssh-fl='ssh fuellogicweb@fuellogicweb.ssh.wpengine.net'
