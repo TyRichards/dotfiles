@@ -38,7 +38,7 @@ alias theme-super-game-bro='cd ~/.config/omarchy/themes/super-game-bro/'
 # SSH to Machines
 alias ssh-claw='ssh claw@beelink.tail6c9375.ts.net'
 claw() {
-    ssh -t claw@beelink.tail6c9375.ts.net "export PATH='/home/claw/.local/share/mise/installs/node/25.8.0/bin:/home/claw/.local/share/omarchy/bin:/home/claw/.local/share/mise/shims:/home/claw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin'; openclaw tui"
+  openclaw tui --url "$(cat ~/.openclaw/.beelink-url)" --password "$(cat ~/.openclaw/.beelink-password)"
 }
 
 # SSH WP Engine Websites
@@ -58,14 +58,14 @@ alias ssh-ty='ssh tyrichards@tyrichards.ssh.wpengine.net'
 alias update-shuffle='python /usr/bin/ipod-shuffle-4g /run/media/trr/TYPOD/ --track-voiceover'
 
 download() {
-    yt-dlp -x \
-        --audio-format mp3 \
-        --audio-quality 0 \
-        --embed-thumbnail \
-        --embed-metadata \
-        --parse-metadata "playlist_index:%(track_number)s" \
-        -o "%(playlist_index)02d %(title)s.%(ext)s" \
-        "$@"
+  yt-dlp -x \
+    --audio-format mp3 \
+    --audio-quality 0 \
+    --embed-thumbnail \
+    --embed-metadata \
+    --parse-metadata "playlist_index:%(track_number)s" \
+      -o "%(playlist_index)02d %(title)s.%(ext)s" \
+      "$@"
 }
 
 export PATH="$PATH:/var/lib/snapd/snap/bin"
@@ -73,3 +73,4 @@ export PATH="$HOME/.local/bin:$PATH"
 export XDG_SESSION_TYPE=wayland
 
 # export QT_SCALE_FACTOR=0.75
+export PATH="$HOME/.npm-global/bin:$PATH"
