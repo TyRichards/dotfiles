@@ -34,6 +34,7 @@ alias theme='cd ~/.config/omarchy/themes/'
 alias theme-space-monkey='cd ~/.config/omarchy/themes/space-monkey/'
 alias theme-felix='cd ~/.config/omarchy/themes/felix/'
 alias theme-super-game-bro='cd ~/.config/omarchy/themes/super-game-bro/'
+alias theme-odyssey='cd ~/.config/omarchy/themes/odyssey'
 
 # SSH to Machines
 alias ssh-claw='ssh claw@beelink.tail6c9375.ts.net'
