@@ -28,8 +28,8 @@ bindd = SUPER SHIFT ALT, A, OpenCode, exec, omarchy-launch-tui opqencode
 bindd = SUPER SHIFT CTRL ALT, A, Fireworks AI, exec, omarchy-launch-webapp "https://app.fireworks.ai/account/billing?tab=usage"
 # SUPER+SHIFT+A was previously OpenClaw TUI
 unbind = SUPER SHIFT, A
-bindd = SUPER SHIFT, A, AI Chat (Pi), exec, [float; size 600 800; center] uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.chat -e bash -ic chat
-bindd = SUPER SHIFT, S, Space, exec, [float; size 600 800; center] uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.space -e bash -ic space
+bindd = SUPER SHIFT, A, AI Chat (Pi), exec, [float; size 600 800; center] omarchy-launch-tui bash -ic chat
+bindd = SUPER SHIFT, S, Space, exec, [float; size 600 800; center] omarchy-launch-tui bash -ic space
 
 bindd = SUPER SHIFT ALT, C, Calendar, exec, omarchy-launch-webapp "https://app.hey.com/calendar/weeks/"
 bindd = SUPER SHIFT, C, Calculator, exec, gnome-calculator

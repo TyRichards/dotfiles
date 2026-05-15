@@ -24,12 +24,9 @@ bindd = SUPER SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop
 
 # AI
 bindd = SUPER SHIFT CTRL, A, OpenClaw Control, exec, omarchy-launch-webapp "https://beelink.tail6c9375.ts.net:18789/"
+bindd = SUPER SHIFT, A, OpenClaw TUI, exec, openclaw tui
 bindd = SUPER SHIFT ALT, A, OpenCode, exec, omarchy-launch-tui opqencode
 bindd = SUPER SHIFT CTRL ALT, A, Fireworks AI, exec, omarchy-launch-webapp "https://app.fireworks.ai/account/billing?tab=usage"
-# SUPER+SHIFT+A was previously OpenClaw TUI
-unbind = SUPER SHIFT, A
-bindd = SUPER SHIFT, A, AI Chat (Pi), exec, [float; size 600 800; center] uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.chat -e bash -ic chat
-bindd = SUPER SHIFT, S, Space, exec, [float; size 600 800; center] uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.space -e bash -ic space
 
 bindd = SUPER SHIFT ALT, C, Calendar, exec, omarchy-launch-webapp "https://app.hey.com/calendar/weeks/"
 bindd = SUPER SHIFT, C, Calculator, exec, gnome-calculator
@@ -88,9 +85,8 @@ bindd = ALT SHIFT, UP, Move window to group on top, moveintogroup, u
 bindd = ALT SHIFT, DOWN, Move window to group on bottom, moveintogroup, d
 
 # Change Active Window In Group
-# Disabled so tmux can receive Alt+Left/Right for window navigation
-# bind = ALT, left, changegroupactive, b
-# bind = ALT, right, changegroupactive, f
+bind = ALT, left, changegroupactive, b
+bind = ALT, right, changegroupactive, f
 
 # Move Window Placement within group
 bind = ALT SHIFT, left, movegroupwindow, b

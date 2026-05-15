@@ -41,8 +41,8 @@ bind -n M-7 select-window -t 7
 bind -n M-8 select-window -t 8
 bind -n M-9 select-window -t 9
 
-bind -n M-Left previous-window
-bind -n M-Right next-window
+bind -n M-Left select-window -t -1
+bind -n M-Right select-window -t +1
 bind -n M-S-Left swap-window -t -1 \; select-window -t -1
 bind -n M-S-Right swap-window -t +1 \; select-window -t +1
 
@@ -102,7 +102,4 @@ set -g pane-border-status top
 # Pi Recommended Settings
 set -g extended-keys on
 set -g extended-keys-format csi-u
-
-# Load active Omarchy theme tmux overrides
-source-file -q ~/.config/omarchy/current/theme/tmux.conf
 
