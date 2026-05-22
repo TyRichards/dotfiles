@@ -14,6 +14,8 @@
     - [ ] merge downloads and screenshots
 
 ## Features
+- [ ] Flip Zed tree and AI chat windows left & right
+- [ ] Style Zed for framework theme
 - [ ] Apple mouse (submit PR)
 - [ ] More ASCII illustrations!! screensaver, fastfetch, pi agent intro
 - [ ] Tmux session resurrect
