@@ -55,3 +55,31 @@
 -- Enable touchpad gestures for moving focus (helpful on scrolling layout).
 -- hl.gesture({ fingers = 3, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
 -- hl.gesture({ fingers = 3, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
+
+-- Settings ported from dotfiles_2025 hyprland/.config/hypr/input.conf.
+hl.config({
+  input = {
+    kb_options = "compose:ralt,altwin:swap_alt_win",
+    repeat_rate = 40,
+    repeat_delay = 600,
+    sensitivity = 0.25,
+
+    touchpad = {
+      natural_scroll = true,
+      clickfinger_behavior = true,
+      scroll_factor = 0.25,
+      disable_while_typing = false,
+    },
+  },
+})
+
+-- Scroll faster in terminals.
+o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })
+o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })
+
+-- Magic Mouse settings.
+hl.device({
+  name = "ty_magic_mouse",
+  sensitivity = -0.9,
+  scroll_factor = 2.0,
+})
