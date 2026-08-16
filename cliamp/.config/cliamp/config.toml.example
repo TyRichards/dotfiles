@@ -1,0 +1,10 @@
+# Copy to config.toml and keep the real file ignored because it contains credentials.
+provider = "jellyfin"
+
+[jellyfin]
+url = "https://jellyfin.example.com/"
+# Authenticate with either an API token:
+token = "your-api-token"
+# or replace the token with:
+# user = "your-username"
+# password = "your-password"

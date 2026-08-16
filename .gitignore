@@ -1,0 +1,7 @@
+bash/.bashrc
+
+# Cliamp local Jellyfin credentials and runtime files
+cliamp/.config/cliamp/config.toml
+cliamp/.config/cliamp/cliamp.log
+cliamp/.config/cliamp/cliamp.sock
+cliamp/.config/cliamp/cliamp.sock.pid
