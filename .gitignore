@@ -1,7 +1,12 @@
 bash/.bashrc
 
-# Cliamp local Jellyfin credentials and runtime files
+# Generated Python bytecode
+__pycache__/
+*.py[cod]
+
+# Cliamp local Jellyfin credentials, history URLs, and runtime files
 cliamp/.config/cliamp/config.toml
+cliamp/.config/cliamp/history.toml
 cliamp/.config/cliamp/cliamp.log
 cliamp/.config/cliamp/cliamp.sock
 cliamp/.config/cliamp/cliamp.sock.pid

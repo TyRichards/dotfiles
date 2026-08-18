@@ -15,10 +15,7 @@
           "format": "h:mm AP",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "lifeExpectancy": 85,
-          "verticalFormat": "HH\n—\nmm"
-        },
-        {
-          "id": "trr.orthodox"
+          "verticalFormat": "h\n—\nmm\nAP"
         },
         {
           "id": "omarchy.weather"
@@ -37,7 +34,7 @@
       ],
       "right": [
         {
-          "id": "omarchy.tray"
+          "id": "io.github.tyrichards.orthodox-daily"
         },
         {
           "id": "omarchy.agents"
@@ -60,7 +57,7 @@
       ]
     },
     "position": "top",
-    "transparent": false
+    "transparent": true
   },
   "idle": {
     "lock": 300,

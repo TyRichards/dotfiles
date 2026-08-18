@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+"""Check or apply the stowed Brave keyboard shortcut configuration."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any
+
+CONFIG_PATH = Path("~/.config/brave-shortcuts/config.json").expanduser()
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    try:
+        return json.loads(path.read_text())
+    except FileNotFoundError:
+        raise SystemExit(f"Missing file: {path}") from None
+    except json.JSONDecodeError as error:
+        raise SystemExit(f"Invalid JSON in {path}: {error}") from error
+
+
+def preferences_path(config: dict[str, Any]) -> Path:
+    raw_path = config.get("preferences")
+    if not isinstance(raw_path, str) or not raw_path:
+        raise SystemExit(f"Missing preferences path in {CONFIG_PATH}")
+    return Path(raw_path).expanduser()
+
+
+def brave_is_running() -> bool:
+    proc = Path("/proc")
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            if (entry / "comm").read_text().strip() == "brave":
+                return True
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue
+    return False
+
+
+def expected_extension_command(command: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "command_name": command["command_name"],
+        "extension": command["extension"],
+        "global": bool(command.get("global", False)),
+    }
+
+
+def problems(config: dict[str, Any], preferences: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    extensions = preferences.get("extensions", {})
+    commands = extensions.get("commands", {})
+
+    for command in config.get("extension_commands", []):
+        accelerator = command["accelerator"]
+        expected = expected_extension_command(command)
+        if commands.get(accelerator) != expected:
+            issues.append(f"extension command {accelerator} is not configured as {command['command_name']}")
+
+        for assigned_key, assigned in commands.items():
+            if assigned_key == accelerator or not isinstance(assigned, dict):
+                continue
+            if (
+                assigned.get("command_name") == command["command_name"]
+                and assigned.get("extension") == command["extension"]
+            ):
+                issues.append(f"extension command {command['command_name']} is also assigned to {assigned_key}")
+
+    accelerators = preferences.get("brave", {}).get("accelerators", {})
+    for name, shortcut in config.get("browser_accelerators", {}).items():
+        command_id = shortcut["command_id"]
+        if accelerators.get(command_id) != shortcut["keys"]:
+            issues.append(f"browser accelerator {name} ({command_id}) does not match")
+
+    return issues
+
+
+def apply_config(config: dict[str, Any], preferences: dict[str, Any]) -> None:
+    extensions = preferences.setdefault("extensions", {})
+    commands = extensions.setdefault("commands", {})
+    settings = extensions.get("settings", {})
+
+    for command in config.get("extension_commands", []):
+        accelerator = command["accelerator"]
+        command_name = command["command_name"]
+        extension_id = command["extension"]
+
+        for assigned_key, assigned in list(commands.items()):
+            if not isinstance(assigned, dict):
+                continue
+            if assigned.get("command_name") == command_name and assigned.get("extension") == extension_id:
+                del commands[assigned_key]
+
+        commands[accelerator] = expected_extension_command(command)
+
+        extension_commands = settings.get(extension_id, {}).get("commands", {})
+        extension_command = extension_commands.get(command_name)
+        if isinstance(extension_command, dict):
+            extension_command["was_assigned"] = True
+
+    accelerators = preferences.setdefault("brave", {}).setdefault("accelerators", {})
+    for shortcut in config.get("browser_accelerators", {}).values():
+        accelerators[shortcut["command_id"]] = shortcut["keys"]
+
+
+def atomic_write(path: Path, data: dict[str, Any]) -> None:
+    mode = path.stat().st_mode
+    with tempfile.NamedTemporaryFile("w", dir=path.parent, prefix=f".{path.name}.", delete=False) as output:
+        temp_path = Path(output.name)
+        json.dump(data, output, separators=(",", ":"))
+        output.flush()
+        os.fsync(output.fileno())
+
+    try:
+        os.chmod(temp_path, mode)
+        os.replace(temp_path, path)
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--apply", action="store_true", help="write the configured shortcuts to Brave Preferences")
+    args = parser.parse_args()
+
+    config = load_json(CONFIG_PATH)
+    path = preferences_path(config)
+
+    if path.is_symlink():
+        raise SystemExit(f"Refusing to modify symlinked Brave Preferences: {path}")
+
+    preferences = load_json(path)
+    current_problems = problems(config, preferences)
+
+    if not args.apply:
+        if current_problems:
+            for issue in current_problems:
+                print(f"MISMATCH: {issue}")
+            print("Run 'brave-shortcuts --apply' after closing Brave.")
+            return 1
+        print("Brave shortcuts match the stowed configuration.")
+        return 0
+
+    if brave_is_running():
+        raise SystemExit("Brave is running. Close it before applying shortcuts.")
+
+    if not current_problems:
+        print("Brave shortcuts already match the stowed configuration.")
+        return 0
+
+    backup = path.with_name(f"{path.name}.brave-shortcuts.bak")
+    shutil.copy2(path, backup)
+    apply_config(config, preferences)
+    atomic_write(path, preferences)
+
+    remaining = problems(config, load_json(path))
+    if remaining:
+        raise SystemExit("Shortcut verification failed after writing Preferences.")
+
+    print(f"Applied Brave shortcuts. Backup: {backup}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

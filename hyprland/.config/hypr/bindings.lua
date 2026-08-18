@@ -58,6 +58,10 @@ o.bind("SUPER + SHIFT + V", "Capcut", { webapp = "https://www.capcut.com/my-clou
 
 -- OMARCHY QUATTRO OVERRIDES
 --
+-- Free these group-movement shortcuts for Brave.
+hl.unbind("SUPER + ALT + LEFT")
+hl.unbind("SUPER + ALT + RIGHT")
+
 -- Rebind SUPER+SHIFT+ALT+M from Quattro's Music TUI binding to YouTube Music.
 hl.unbind("SUPER + SHIFT + ALT + M")
 o.bind("SUPER + SHIFT + ALT + M", "YouTube Music", { webapp = "https://music.youtube.com/" })

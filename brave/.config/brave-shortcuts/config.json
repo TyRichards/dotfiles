@@ -1,0 +1,29 @@
+{
+  "preferences": "~/.config/BraveSoftware/Brave-Browser/Default/Preferences",
+  "extension_commands": [
+    {
+      "accelerator": "linux:Alt+Shift+U",
+      "command_name": "copy-url",
+      "extension": "bgpiichlckmfanooecilcjemknkcpngb",
+      "global": false
+    }
+  ],
+  "browser_accelerators": {
+    "next_tab": {
+      "command_id": "34016",
+      "keys": [
+        "Control+Tab",
+        "Control+End",
+        "Meta+Alt+ArrowRight"
+      ]
+    },
+    "previous_tab": {
+      "command_id": "34017",
+      "keys": [
+        "Control+Shift+Tab",
+        "Control+Home",
+        "Meta+Alt+ArrowLeft"
+      ]
+    }
+  }
+}
