@@ -40,7 +40,7 @@ o.bind("SUPER + SHIFT + ALT + S", "Omaski", "omarchy shell omaski launch")
 o.bind("F10", "ChatGPT", { webapp = "https://chatgpt.com/" })
 o.bind("code:255", "AI", { webapp = "https://chatgpt.com/" })
 o.bind("XF86Search", "AI", { webapp = "https://chatgpt.com/" })
-o.bind("SUPER + SHIFT + CTRL + M", "Jellyfin", { webapp = "http://media.catknife.com" })
+o.bind("SUPER + SHIFT + CTRL + M", "YouTube Music", { webapp = "https://music.youtube.com/" })
 o.bind("SUPER + SHIFT + K", "KVM", { webapp = "https://kvm/" })
 o.bind("SUPER + SHIFT + CTRL + ALT + M", "Bandcamp", { webapp = "https://bandcamp.com/tyrichards" })
 o.bind("SUPER + SHIFT + CTRL + O", "Sprinter", { webapp = "https://sprinter.getfreewrite.com/" })
@@ -63,9 +63,9 @@ o.bind("SUPER + SHIFT + V", "Capcut", { webapp = "https://www.capcut.com/my-clou
 hl.unbind("SUPER + ALT + LEFT")
 hl.unbind("SUPER + ALT + RIGHT")
 
--- Rebind SUPER+SHIFT+ALT+M from Quattro's Music TUI binding to YouTube Music.
+-- Rebind SUPER+SHIFT+ALT+M from Quattro's Music TUI binding to Jellyfin.
 hl.unbind("SUPER + SHIFT + ALT + M")
-o.bind("SUPER + SHIFT + ALT + M", "YouTube Music", { webapp = "https://music.youtube.com/" })
+o.bind("SUPER + SHIFT + ALT + M", "Jellyfin", { webapp = "http://media.catknife.com" })
 
 -- Rebind SUPER+SHIFT+SLASH from Quattro's 1Password binding to Bitwarden.
 hl.unbind("SUPER + SHIFT + SLASH")
