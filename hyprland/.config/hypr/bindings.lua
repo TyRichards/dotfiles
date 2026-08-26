@@ -33,10 +33,8 @@
 -- collide with current Quattro defaults are left commented in the section below.
 
 -- Apps, web apps, and TUIs
-o.bind("SUPER + SHIFT + CTRL + F", "Yazi", { tui = "yazi" })
 o.bind("SUPER + SHIFT + CTRL + T", "Activity", { tui = "btop" })
 o.bind("SUPER + SHIFT + ALT + D", "Docker", { tui = "lazydocker" })
-o.bind("SUPER + SHIFT + ALT + S", "Omaski", "omarchy shell omaski launch")
 o.bind("F10", "ChatGPT", { webapp = "https://chatgpt.com/" })
 o.bind("code:255", "AI", { webapp = "https://chatgpt.com/" })
 o.bind("XF86Search", "AI", { webapp = "https://chatgpt.com/" })
@@ -48,7 +46,6 @@ o.bind("SUPER + SHIFT + ALT + C", "Calendar", { webapp = "https://app.hey.com/ca
 o.bind("SUPER + SHIFT + CTRL + Y", "YNAB", { webapp = "https://app.ynab.com/0e1590a0-5d83-4f73-9eb9-ec7a73224660/accounts/0fb9be55-928c-4656-bccf-2cb841f9730c" })
 o.bind("SUPER + SHIFT + ALT + Y", "Netflix", { webapp = "https://www.netflix.com/browse" })
 o.bind("SUPER + SHIFT + CTRL + X", "X Post", { webapp = "https://x.com/compose/post" })
-o.bind("SUPER + SHIFT + CTRL + S", "Strety", { webapp = "https://2.strety.com/171dc201-25de-40db-86c9-0817d43a6ab7/home" })
 o.bind("SUPER + SHIFT + ALT + R", "Basecamp Heystack", { webapp = "https://3.basecamp.com/5973641/my/readings" })
 o.bind("SUPER + SHIFT + Z", "RingCentral", { webapp = "https://v.ringcentral.com/launcher/524419047" })
 o.bind("SUPER + SHIFT + L", "Light Phone", { webapp = "https://dashboard.thelightphone.com/devices/bebe5ada-a6e4-417f-b40a-e9274cc60005" })
@@ -83,9 +80,15 @@ hl.bind("SUPER + TAB", hl.dsp.focus({ workspace = "previous" }), { description =
 hl.unbind("SUPER + SHIFT + G")
 o.bind("SUPER + SHIFT + G", "Google Maps", { webapp = "https://maps.google.com/", focus = true })
 
--- Rebind SUPER+SHIFT+S from Quattro's Google Maps binding to Basecamp.
+-- File managers: replace the previous Basecamp, Strety, and Omaski bindings.
 hl.unbind("SUPER + SHIFT + S")
-o.bind("SUPER + SHIFT + S", "Basecamp", { webapp = "https://3.basecamp.com/5973641/" })
+o.bind("SUPER + SHIFT + S", "Superfile", { tui = "spf" })
+
+hl.unbind("SUPER + SHIFT + CTRL + S")
+o.bind("SUPER + SHIFT + CTRL + S", "Nautilus", { omarchy = "nautilus" })
+
+hl.unbind("SUPER + SHIFT + ALT + S")
+o.bind("SUPER + SHIFT + ALT + S", "Yazi", { tui = "yazi" })
 
 -- Rebind SUPER+SHIFT+C from Quattro's HEY Calendar binding to Omacalc.
 hl.unbind("SUPER + SHIFT + C")
@@ -141,7 +144,7 @@ o.bind("SUPER + CTRL + code:20", "Toggle CRT scanlines", "omarchy-shell -q displ
 
 -- SUPER + SHIFT + G was resolved above by unbinding Quattro's Signal binding before adding Google Maps.
 
--- SUPER + SHIFT + S was resolved above by unbinding Quattro's Google Maps binding before adding Basecamp.
+-- SUPER + SHIFT + S was resolved above by unbinding Quattro's Google Maps binding before adding Superfile.
 
 -- SUPER + SHIFT + P conflicts with Quattro: Google Photos.
 -- o.bind("SUPER + SHIFT + P", "Immich", { webapp = "http://photos.catknife.com" })
