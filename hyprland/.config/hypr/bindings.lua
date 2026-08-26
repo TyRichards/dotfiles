@@ -36,6 +36,7 @@
 o.bind("SUPER + SHIFT + CTRL + F", "Yazi", { tui = "yazi" })
 o.bind("SUPER + SHIFT + CTRL + T", "Activity", { tui = "btop" })
 o.bind("SUPER + SHIFT + ALT + D", "Docker", { tui = "lazydocker" })
+o.bind("SUPER + SHIFT + ALT + S", "Omaski", "omarchy shell omaski launch")
 o.bind("F10", "ChatGPT", { webapp = "https://chatgpt.com/" })
 o.bind("code:255", "AI", { webapp = "https://chatgpt.com/" })
 o.bind("XF86Search", "AI", { webapp = "https://chatgpt.com/" })
@@ -97,6 +98,17 @@ o.bind("SUPER + F11", "CRUA HDMI 1", "~/.local/bin/omarchy-crua-input hdmi1")
 o.bind("SUPER + F12", "CRUA DP 1", "~/.local/bin/omarchy-crua-input dp1")
 o.bind("code:127", "Start Dictation (LG Keyboard)", "voxtype record toggle")
 o.bind("XF86AudioMedia", "Start Dictation", "voxtype record toggle")
+
+-- CRT scanlines: toggle power without changing the saved Light/Heavy preset.
+-- The minus key is the scanline itself.
+--
+-- SUPER+CTRL+MINUS was Quattro's "Expand window left a lot". It is declared
+-- upstream as `code:20` rather than `MINUS`
+-- (default/hypr/bindings/tiling.lua), and hl.unbind matches on the literal
+-- key spec — unbinding "SUPER + CTRL + MINUS" silently does nothing. Unbind
+-- the keycode form to actually clear it.
+hl.unbind("SUPER + CTRL + code:20")
+o.bind("SUPER + CTRL + code:20", "Toggle CRT scanlines", "omarchy-shell -q display-scanlines crt toggle")
 
 -- need new keybindings that do not conflict with Quattro
 -- The old bindings below conflict with current Omarchy Quattro defaults or with

@@ -17,7 +17,7 @@
 hl.config({
   decoration = {
     -- Applied to Hyprland windows and mirrored by Omarchy's Quickshell UI.
-    rounding = 8,
+    -- rounding = 8,
   },
 })
 

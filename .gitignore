@@ -1,5 +1,9 @@
 bash/.bashrc
 
+# Local editor/tool backups
+*.bak
+*.bak.*
+
 # Generated Python bytecode
 __pycache__/
 *.py[cod]

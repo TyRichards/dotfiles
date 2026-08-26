@@ -27,3 +27,12 @@ require("default.hypr.toggles")
 
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
+
+-- Keep Bitwarden's Chromium extension popouts at the size they can render.
+-- Remove after the upstream Omarchy fix is installed.
+o.window(".*nngceckbapebfimnlniiiahkandclblb.*", {
+  float = true,
+  max_size = { 480, 650 },
+  no_blur = true,
+  no_screen_share = true,
+})

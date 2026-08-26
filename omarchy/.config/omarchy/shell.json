@@ -30,11 +30,20 @@
         },
         {
           "id": "io.github.tyrichards.workspaces-jap"
+        },
+        {
+          "id": "io.github.tyrichards.skifree"
+        },
+        {
+          "id": "io.github.tyrichards.omarski"
         }
       ],
       "right": [
         {
           "id": "io.github.tyrichards.orthodox-daily"
+        },
+        {
+          "id": "omarchy.tailscale"
         },
         {
           "id": "omarchy.agents"
@@ -49,7 +58,7 @@
           "id": "omarchy.audio"
         },
         {
-          "id": "omarchy.monitor"
+          "id": "io.github.tyrichards.display-crt"
         },
         {
           "id": "omarchy.power"
@@ -57,7 +66,7 @@
       ]
     },
     "position": "top",
-    "transparent": true
+    "transparent": false
   },
   "idle": {
     "lock": 300,
