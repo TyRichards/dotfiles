@@ -7,6 +7,7 @@ font-style = Regular
 font-size = 9
 
 # Window
+background-opacity = 0.75
 window-theme = ghostty
 window-padding-x = 35
 window-padding-y = 35
