@@ -34,6 +34,7 @@
 
 -- Apps, web apps, and TUIs
 o.bind("SUPER + SHIFT + CTRL + T", "Activity", { tui = "btop" })
+o.bind("SUPER + SHIFT + CTRL + E", "HEY Tui", "gtk-launch 'HEY Tui'")
 o.bind("SUPER + SHIFT + ALT + D", "Docker", { tui = "lazydocker" })
 o.bind("F10", "ChatGPT", { webapp = "https://chatgpt.com/" })
 o.bind("code:255", "AI", { webapp = "https://chatgpt.com/" })
@@ -41,10 +42,17 @@ o.bind("XF86Search", "AI", { webapp = "https://chatgpt.com/" })
 o.bind("SUPER + SHIFT + CTRL + M", "YouTube Music", { webapp = "https://music.youtube.com/" })
 o.bind("SUPER + SHIFT + K", "KVM", { webapp = "https://kvm/" })
 o.bind("SUPER + SHIFT + CTRL + ALT + M", "Bandcamp", { webapp = "https://bandcamp.com/tyrichards" })
+
+-- Rebind Google Messages to Giphy.
+hl.unbind("SUPER + SHIFT + CTRL + G")
+o.bind("SUPER + SHIFT + CTRL + G", "Giphy", { webapp = "https://giphy.com/", focus = true })
+
 o.bind("SUPER + SHIFT + CTRL + O", "Sprinter", { webapp = "https://sprinter.getfreewrite.com/" })
 o.bind("SUPER + SHIFT + ALT + C", "Calendar", { webapp = "https://app.hey.com/calendar/weeks/" })
 o.bind("SUPER + SHIFT + CTRL + Y", "YNAB", { webapp = "https://app.ynab.com/0e1590a0-5d83-4f73-9eb9-ec7a73224660/accounts/0fb9be55-928c-4656-bccf-2cb841f9730c" })
-o.bind("SUPER + SHIFT + ALT + Y", "Netflix", { webapp = "https://www.netflix.com/browse" })
+-- Texas Trust Credit Union.
+hl.unbind("SUPER + SHIFT + ALT + Y")
+o.bind("SUPER + SHIFT + ALT + Y", "Texas Trust Credit Union", { webapp = "https://texastrustcreditunion.financialhost.org/user-login" })
 o.bind("SUPER + SHIFT + CTRL + X", "X Post", { webapp = "https://x.com/compose/post" })
 o.bind("SUPER + SHIFT + ALT + R", "Basecamp Heystack", { webapp = "https://3.basecamp.com/5973641/my/readings" })
 o.bind("SUPER + SHIFT + Z", "RingCentral", { webapp = "https://v.ringcentral.com/launcher/524419047" })
@@ -90,15 +98,12 @@ o.bind("SUPER + SHIFT + CTRL + S", "Strety", { webapp = "https://2.strety.com/17
 hl.unbind("SUPER + SHIFT + ALT + S")
 o.bind("SUPER + SHIFT + ALT + S", "Omaski", "omarchy shell omaski launch")
 
--- File managers: replace Quattro's Nautilus and Nautilus-at-CWD bindings.
+-- File managers: restore Nautilus and use Yazi instead of Nautilus-at-CWD.
 hl.unbind("SUPER + SHIFT + F")
-o.bind("SUPER + SHIFT + F", "Superfile", { tui = "spf" })
+o.bind("SUPER + SHIFT + F", "Nautilus", { omarchy = "nautilus" })
 
 hl.unbind("SUPER + SHIFT + CTRL + F")
-o.bind("SUPER + SHIFT + CTRL + F", "Nautilus", { omarchy = "nautilus" })
-
-hl.unbind("SUPER + ALT + SHIFT + F")
-o.bind("SUPER + SHIFT + ALT + F", "Yazi", { tui = "yazi" })
+o.bind("SUPER + SHIFT + CTRL + F", "Yazi", { tui = "yazi" })
 
 -- Rebind SUPER+SHIFT+C from Quattro's HEY Calendar binding to Omacalc.
 hl.unbind("SUPER + SHIFT + C")
@@ -111,6 +116,23 @@ o.bind("SUPER + F11", "CRUA HDMI 1", "~/.local/bin/omarchy-crua-input hdmi1")
 o.bind("SUPER + F12", "CRUA DP 1", "~/.local/bin/omarchy-crua-input dp1")
 o.bind("code:127", "Start Dictation (LG Keyboard)", "voxtype record toggle")
 o.bind("XF86AudioMedia", "Start Dictation", "voxtype record toggle")
+
+-- Replace Omarchy's brightness bindings with an ultra-dark low-end curve.
+-- Logical 10 is the laptop's native 1% hardware minimum. Levels 9 through 1
+-- progressively gamma-dim below that floor; levels above 10 smoothly span
+-- the remaining physical backlight range.
+hl.unbind("XF86MonBrightnessUp")
+hl.unbind("XF86MonBrightnessDown")
+hl.unbind("SHIFT + XF86MonBrightnessUp")
+hl.unbind("SHIFT + XF86MonBrightnessDown")
+hl.unbind("ALT + XF86MonBrightnessUp")
+hl.unbind("ALT + XF86MonBrightnessDown")
+o.bind("XF86MonBrightnessUp", "Brightness up", "~/.local/bin/omarchy-brightness-lowrange +5%", { locked = true, repeating = true })
+o.bind("XF86MonBrightnessDown", "Brightness down", "~/.local/bin/omarchy-brightness-lowrange 5%-", { locked = true, repeating = true })
+o.bind("SHIFT + XF86MonBrightnessUp", "Brightness maximum", "~/.local/bin/omarchy-brightness-lowrange 100%", { locked = true, repeating = true })
+o.bind("SHIFT + XF86MonBrightnessDown", "Brightness minimum", "~/.local/bin/omarchy-brightness-lowrange 1%", { locked = true, repeating = true })
+o.bind("ALT + XF86MonBrightnessUp", "Brightness up precise", "~/.local/bin/omarchy-brightness-lowrange +1%", { locked = true, repeating = true })
+o.bind("ALT + XF86MonBrightnessDown", "Brightness down precise", "~/.local/bin/omarchy-brightness-lowrange 1%-", { locked = true, repeating = true })
 
 -- CRT scanlines: toggle power without changing the saved Light/Heavy preset.
 -- The minus key is the scanline itself.

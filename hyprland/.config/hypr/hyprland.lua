@@ -28,6 +28,13 @@ require("default.hypr.toggles")
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
 
+-- Open the bound Bitwarden app and btop as standard tiled panes instead of
+-- Omarchy's pre-sized floating windows.
+o.window("^(Bitwarden|org\\.omarchy\\.btop)$", {
+  tile = true,
+  tag = "-floating-window",
+})
+
 -- Keep Bitwarden's Chromium extension popouts at the size they can render.
 -- Remove after the upstream Omarchy fix is installed.
 o.window(".*nngceckbapebfimnlniiiahkandclblb.*", {

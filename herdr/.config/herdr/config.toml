@@ -96,6 +96,17 @@ next_workspace = ["prefix+shift+n", "alt+down"]
 # previous_agent = "alt+shift+up"
 # next_agent = "alt+shift+down"
 
+# Swap the focused pane with its neighbor inside the current Herdr tab.
+[[keys.command]]
+key = "super+shift+ctrl+alt+left"
+type = "shell"
+command = "herdr pane swap --direction left"
+
+[[keys.command]]
+key = "super+shift+ctrl+alt+right"
+type = "shell"
+command = "herdr pane swap --direction right"
+
 [ui]
 accent = "blue"
 

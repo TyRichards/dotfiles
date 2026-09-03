@@ -1,0 +1,177 @@
+#!/bin/bash
+
+# Extend the internal panel below its native 1% hardware floor.
+# Logical level 10 is the laptop's normal minimum brightness. Levels 9 through
+# 1 keep that hardware floor and progressively reduce perceived brightness with
+# hyprsunset gamma; levels 11 through 100 smoothly span the remaining hardware
+# range. External displays retain Omarchy's normal DDC/Apple behavior.
+
+set -euo pipefail
+
+system_brightness=/usr/bin/omarchy-brightness-display
+original_args=("$@")
+no_osd=0
+monitor=""
+show_map=0
+
+while (( $# > 0 )); do
+  case "$1" in
+    --no-osd)
+      no_osd=1
+      shift
+      ;;
+    --monitor)
+      (( $# >= 2 )) || exit 1
+      monitor=$2
+      shift 2
+      ;;
+    --map)
+      show_map=1
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+[[ -n $monitor ]] || monitor=$(omarchy-hyprland-monitor-focused 2>/dev/null || true)
+
+if [[ ! $monitor =~ ^(eDP|LVDS|DSI)- ]]; then
+  exec "$system_brightness" "${original_args[@]}"
+fi
+
+device=$(omarchy-hw-display) || exit 1
+maximum=$(brightnessctl -d "$device" max)
+native_minimum=$(((maximum + 50) / 100))
+(( native_minimum < 1 )) && native_minimum=1
+
+# Perceptually graduated gamma percentages for logical levels 1 through 10.
+# Level 1 is nearly off; level 10 is native 1% hardware brightness at full gamma.
+low_gamma_percent=(0 3 5 8 12 18 27 40 55 75 100)
+
+raw_for_level() {
+  local level=$1 raw span
+
+  if (( level <= 10 )); then
+    raw=$native_minimum
+  else
+    span=$((maximum - native_minimum))
+    raw=$((native_minimum + ((level - 10) * span + 45) / 90))
+  fi
+
+  (( raw < native_minimum )) && raw=$native_minimum
+  (( raw > maximum )) && raw=$maximum
+  printf '%s\n' "$raw"
+}
+
+gamma_for_level() {
+  local level=$1
+
+  if (( level <= 10 )); then
+    printf '%s\n' "${low_gamma_percent[level]}"
+  else
+    printf '100\n'
+  fi
+}
+
+current_gamma() {
+  local value
+  value=$(hyprctl hyprsunset gamma 2>/dev/null | grep -oE '[0-9]+([.][0-9]+)?' | head -n1 || true)
+  if [[ -n $value ]]; then
+    awk -v value="$value" 'BEGIN { printf "%.0f\n", value }'
+  else
+    printf '100\n'
+  fi
+}
+
+ensure_hyprsunset() {
+  local attempt
+
+  if ! pgrep -x hyprsunset >/dev/null; then
+    setsid uwsm-app -- hyprsunset >/dev/null 2>&1 &
+    for attempt in {1..10}; do
+      hyprctl hyprsunset gamma >/dev/null 2>&1 && return
+      sleep 0.1
+    done
+  fi
+}
+
+apply_gamma() {
+  local level=$1
+  hyprctl hyprsunset gamma "$(gamma_for_level "$level")" >/dev/null
+}
+
+level_from_state() {
+  local raw=$1 gamma=$2 level candidate distance best_level=1 best_distance=1000 span
+
+  if (( raw <= native_minimum )); then
+    for level in {1..10}; do
+      candidate=${low_gamma_percent[level]}
+      distance=$((gamma - candidate))
+      (( distance < 0 )) && distance=$((-distance))
+      if (( distance < best_distance )); then
+        best_distance=$distance
+        best_level=$level
+      fi
+    done
+    printf '%s\n' "$best_level"
+    return
+  fi
+
+  span=$((maximum - native_minimum))
+  level=$((10 + ((raw - native_minimum) * 90 + span / 2) / span))
+  (( level < 10 )) && level=10
+  (( level > 100 )) && level=100
+  printf '%s\n' "$level"
+}
+
+if (( show_map )); then
+  for level in {1..10}; do
+    raw=$(raw_for_level "$level")
+    gamma=$(gamma_for_level "$level")
+    awk -v level="$level" -v raw="$raw" -v max="$maximum" -v gamma="$gamma" \
+      'BEGIN { printf "logical %d -> raw %d/%d (%.3f%% physical), gamma %d%%\n", level, raw, max, raw * 100 / max, gamma }'
+  done
+  exit 0
+fi
+
+if (( $# == 0 )); then
+  level_from_state "$(brightnessctl -d "$device" get)" "$(current_gamma)"
+  exit 0
+fi
+
+step=$1
+if [[ $step == off || $step == on ]]; then
+  exec "$system_brightness" "${original_args[@]}"
+fi
+
+# Start hyprsunset before opening the brightness lock so the long-lived process
+# cannot inherit the lock descriptor and block every future key press.
+ensure_hyprsunset
+
+exec {lock_fd}>"${XDG_RUNTIME_DIR:-/tmp}/omarchy-brightness-display.lock"
+flock -n "$lock_fd" || exit 0
+
+current=$(level_from_state "$(brightnessctl -d "$device" get)" "$(current_gamma)")
+case "$step" in
+  +5%)
+    if (( current < 10 )); then target=$((current + 1)); else target=$((current + 5)); fi
+    ;;
+  5%-)
+    if (( current <= 10 )); then target=$((current - 1)); else target=$((current - 5)); fi
+    ;;
+  +1%) target=$((current + 1)) ;;
+  1%-) target=$((current - 1)) ;;
+  *%)
+    target=${step%%%}
+    [[ $target =~ ^[0-9]+$ ]] || exit 2
+    ;;
+  *) exit 2 ;;
+esac
+
+(( target < 1 )) && target=1
+(( target > 100 )) && target=100
+brightnessctl -d "$device" set "$(raw_for_level "$target")" >/dev/null
+apply_gamma "$target"
+(( no_osd )) || omarchy osd -i brightness -p "$target"
