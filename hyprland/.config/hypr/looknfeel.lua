@@ -14,12 +14,12 @@
 -- })
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#decoration
-hl.config({
-  decoration = {
-    -- Applied to Hyprland windows and mirrored by Omarchy's Quickshell UI.
-    -- rounding = 8,
-  },
-})
+-- hl.config({
+--   decoration = {
+--     -- Applied to Hyprland windows and mirrored by Omarchy's Quickshell UI.
+--     rounding = 8,
+--   },
+-- })
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#animations
 -- hl.config({

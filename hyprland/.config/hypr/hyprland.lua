@@ -43,3 +43,12 @@ o.window(".*nngceckbapebfimnlniiiahkandclblb.*", {
   no_blur = true,
   no_screen_share = true,
 })
+
+-- Open Omacalc at its minimum usable size. This only sets the initial floating
+-- size; the window can still be enlarged or tiled normally afterward.
+o.window("^omacalc$", {
+  size = { 300, 430 },
+})
+
+-- Added by the Omarchy Workspace Layout plugin: registers its Lua tiling layouts.
+do local path = (os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config") .. "/hypr/omarchy-workspace-layout.lua"; local file = io.open(path, "r"); if file then file:close(); dofile(path) end end

@@ -59,7 +59,9 @@ o.bind("SUPER + SHIFT + Z", "RingCentral", { webapp = "https://v.ringcentral.com
 o.bind("SUPER + SHIFT + L", "Light Phone", { webapp = "https://dashboard.thelightphone.com/devices/bebe5ada-a6e4-417f-b40a-e9274cc60005" })
 o.bind("SUPER + SHIFT + I", "Canva", { webapp = "https://www.canva.com/projects/your-projects" })
 o.bind("SUPER + SHIFT + CTRL + I", "Photoshop", { launch = "chromium --app=https://photoshop.adobe.com/?tab=cloud-documents --ozone-platform=wayland" })
-o.bind("SUPER + SHIFT + ALT + I", "Lightroom", { launch = "chromium --app=https://lightroom.adobe.com/home --ozone-platform=wayland" })
+-- Rebind SUPER+SHIFT+ALT+I from Lightroom to Photopea.
+hl.unbind("SUPER + SHIFT + ALT + I")
+o.bind("SUPER + SHIFT + ALT + I", "Photopea", { webapp = "https://www.photopea.com/", focus = true })
 o.bind("SUPER + SHIFT + V", "Capcut", { webapp = "https://www.capcut.com/my-cloud/7552741030714671165" })
 
 -- OMARCHY QUATTRO OVERRIDES
@@ -98,12 +100,11 @@ o.bind("SUPER + SHIFT + CTRL + S", "Strety", { webapp = "https://2.strety.com/17
 hl.unbind("SUPER + SHIFT + ALT + S")
 o.bind("SUPER + SHIFT + ALT + S", "Omaski", "omarchy shell omaski launch")
 
--- File managers: restore Nautilus and use Yazi instead of Nautilus-at-CWD.
+-- Use Nautilus as the primary file browser and keep Flea on the alternate shortcut.
 hl.unbind("SUPER + SHIFT + F")
 o.bind("SUPER + SHIFT + F", "Nautilus", { omarchy = "nautilus" })
-
 hl.unbind("SUPER + SHIFT + CTRL + F")
-o.bind("SUPER + SHIFT + CTRL + F", "Yazi", { tui = "yazi" })
+o.bind("SUPER + SHIFT + CTRL + F", "Flea", { launch = "flea --gui" })
 
 -- Rebind SUPER+SHIFT+C from Quattro's HEY Calendar binding to Omacalc.
 hl.unbind("SUPER + SHIFT + C")
@@ -227,3 +228,11 @@ o.bind("SUPER + CTRL + code:20", "Toggle CRT scanlines", "omarchy-shell -q displ
 
 -- ALT + XF86MonBrightnessDown conflicts with Quattro: Brightness down precise.
 -- o.bind("ALT + XF86MonBrightnessDown", "Brightness down precise", "~/.local/bin/omarchy-brightness-display 1%-", { locked = true, repeating = true })
+
+-- Rebind SUPER+SHIFT+ALT+F from Flea's current-directory launcher to Synchro.
+hl.unbind("SUPER + ALT + SHIFT + F")
+o.bind("SUPER + ALT + SHIFT + F", "Synchro (cwd)", { omarchy = "synchro-cwd" })
+
+-- flea --picker: begin. Written by `flea --picker`; `flea --picker off` removes the block whole.
+o.window("com.thisisgm.flea.picker", { tag = "+floating-window" })
+-- flea --picker: end.
