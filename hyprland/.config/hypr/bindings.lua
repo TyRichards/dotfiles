@@ -110,6 +110,9 @@ o.bind("SUPER + SHIFT + CTRL + F", "Flea", { launch = "flea --gui" })
 hl.unbind("SUPER + SHIFT + C")
 o.bind("SUPER + SHIFT + C", "Omacalc", "omacalc")
 
+-- MP3-only version of Omarchy's Alt+Shift+D browser video download (ytmp3 lives in ~/.bashrc).
+o.bind("ALT + SHIFT + CTRL + D", "Download MP3 from current tab", "bash -ic ytmp3", { release = true })
+
 -- System, window, and hardware controls
 hl.bind("ALT + SHIFT + UP", hl.dsp.window.move({ into_group = "u" }), { description = "Move window to group on top" })
 hl.bind("ALT + SHIFT + DOWN", hl.dsp.window.move({ into_group = "d" }), { description = "Move window to group on bottom" })
