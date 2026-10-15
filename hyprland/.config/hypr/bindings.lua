@@ -109,7 +109,7 @@ o.bind("SUPER + SHIFT + CTRL + F", "Flea", { launch = "flea --gui" })
 -- Rebind SUPER+SHIFT+C from Quattro's HEY Calendar binding to Omacalc.
 hl.unbind("SUPER + SHIFT + C")
 o.bind("SUPER + SHIFT + C", "Omacalc", "omacalc")
-o.bind("SUPER + SHIFT + CTRL + C", "Bullet Calendar", { launch = "bullet-calendar", focus = "bullet-calendar" })
+o.bind("SUPER + SHIFT + CTRL + C", "Google Calendar", { webapp = "https://calendar.google.com/calendar/u/0/r/month", focus = true })
 
 -- MP3-only version of Omarchy's Alt+Shift+D browser video download (ytmp3 lives in ~/.bashrc).
 o.bind("ALT + SHIFT + CTRL + D", "Download MP3 from current tab", "bash -ic ytmp3", { release = true })
