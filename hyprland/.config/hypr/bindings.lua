@@ -92,13 +92,13 @@ o.bind("SUPER + SHIFT + G", "Google Maps", { webapp = "https://maps.google.com/"
 
 -- Restore the S app bindings.
 hl.unbind("SUPER + SHIFT + S")
-o.bind("SUPER + SHIFT + S", "Basecamp", { webapp = "https://3.basecamp.com/5973641/" })
+o.bind("SUPER + SHIFT + S", "Basecamp", { webapp = "https://app.basecamp.com/6187314/" })
 
 hl.unbind("SUPER + SHIFT + CTRL + S")
-o.bind("SUPER + SHIFT + CTRL + S", "Strety", { webapp = "https://2.strety.com/171dc201-25de-40db-86c9-0817d43a6ab7/home" })
+o.bind("SUPER + SHIFT + CTRL + S", "Basecamp Xammis project", { webapp = "https://3.basecamp.com/5973641/projects/47442009" })
 
 hl.unbind("SUPER + SHIFT + ALT + S")
-o.bind("SUPER + SHIFT + ALT + S", "Omaski", "omarchy shell omaski launch")
+o.bind("SUPER + SHIFT + ALT + S", "Strety", { webapp = "https://2.strety.com/171dc201-25de-40db-86c9-0817d43a6ab7/home" })
 
 -- Use Nautilus as the primary file browser and keep Flea on the alternate shortcut.
 hl.unbind("SUPER + SHIFT + F")
@@ -109,7 +109,7 @@ o.bind("SUPER + SHIFT + CTRL + F", "Flea", { launch = "flea --gui" })
 -- Rebind SUPER+SHIFT+C from Quattro's HEY Calendar binding to Omacalc.
 hl.unbind("SUPER + SHIFT + C")
 o.bind("SUPER + SHIFT + C", "Omacalc", "omacalc")
-o.bind("SUPER + SHIFT + CTRL + C", "Google Calendar", { webapp = "https://calendar.google.com/calendar/u/0/r/month", focus = true })
+o.bind("SUPER + SHIFT + CTRL + C", "Basecamp Calendar", { webapp = "https://app.basecamp.com/6187314/calendar", focus = true })
 
 -- MP3-only version of Omarchy's Alt+Shift+D browser video download (ytmp3 lives in ~/.bashrc).
 o.bind("ALT + SHIFT + CTRL + D", "Download MP3 from current tab", "bash -ic ytmp3", { release = true })
