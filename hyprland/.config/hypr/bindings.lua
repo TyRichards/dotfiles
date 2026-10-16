@@ -86,9 +86,9 @@ o.bind("SUPER + SHIFT + M", "Cliamp", { tui = "cliamp" })
 hl.unbind("SUPER + TAB")
 hl.bind("SUPER + TAB", hl.dsp.focus({ workspace = "previous" }), { description = "Last used workspace" })
 
--- Rebind SUPER+SHIFT+G from Quattro's Signal binding to Google Maps.
+-- Rebind SUPER+SHIFT+G from Quattro's Signal binding to Google Messages.
 hl.unbind("SUPER + SHIFT + G")
-o.bind("SUPER + SHIFT + G", "Google Maps", { webapp = "https://maps.google.com/", focus = true })
+o.bind("SUPER + SHIFT + G", "Google Messages", { webapp = "https://messages.google.com/web/conversations", focus = true })
 
 -- Restore the S app bindings.
 hl.unbind("SUPER + SHIFT + S")
@@ -179,7 +179,7 @@ o.bind("SUPER + CTRL + code:20", "Toggle CRT scanlines", "omarchy-shell -q displ
 -- SUPER + SHIFT + D conflicts with Quattro: Docker.
 -- o.bind("SUPER + SHIFT + D", "Discord", { webapp = "https://discord.com/channels/@me" })
 
--- SUPER + SHIFT + G was resolved above by unbinding Quattro's Signal binding before adding Google Maps.
+-- SUPER + SHIFT + G was resolved above by unbinding Quattro's Signal binding before adding Google Messages.
 
 -- SUPER + SHIFT + S was resolved above by unbinding Quattro's Google Maps binding before adding Basecamp.
 
