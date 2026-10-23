@@ -95,7 +95,7 @@ hl.unbind("SUPER + SHIFT + S")
 o.bind("SUPER + SHIFT + S", "Basecamp", { webapp = "https://app.basecamp.com/6187314/" })
 
 hl.unbind("SUPER + SHIFT + CTRL + S")
-o.bind("SUPER + SHIFT + CTRL + S", "Basecamp Xammis project", { webapp = "https://3.basecamp.com/5973641/projects/47442009" })
+o.bind("SUPER + SHIFT + CTRL + S", "Basecamp Xammis", { webapp = "https://3.basecamp.com/5973641/" })
 
 hl.unbind("SUPER + SHIFT + ALT + S")
 o.bind("SUPER + SHIFT + ALT + S", "Strety", { webapp = "https://2.strety.com/171dc201-25de-40db-86c9-0817d43a6ab7/home" })
