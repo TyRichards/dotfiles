@@ -63,6 +63,7 @@ o.bind("SUPER + SHIFT + CTRL + I", "Photoshop", { launch = "chromium --app=https
 hl.unbind("SUPER + SHIFT + ALT + I")
 o.bind("SUPER + SHIFT + ALT + I", "Photopea", { webapp = "https://www.photopea.com/", focus = true })
 o.bind("SUPER + SHIFT + V", "Capcut", { webapp = "https://www.capcut.com/my-cloud/7552741030714671165" })
+o.bind("SUPER + SHIFT + R", "Google Recorder", { webapp = "https://recorder.google.com/" })
 
 -- OMARCHY QUATTRO OVERRIDES
 --
