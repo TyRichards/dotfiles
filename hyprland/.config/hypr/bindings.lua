@@ -83,13 +83,19 @@ o.bind("SUPER + SHIFT + SLASH", "Bitwarden", { launch = "bitwarden-desktop", foc
 hl.unbind("SUPER + SHIFT + M")
 o.bind("SUPER + SHIFT + M", "Cliamp", { tui = "cliamp" })
 
+-- Rebind SUPER+SHIFT+P from Quattro's Google Photos binding to Paper.
+hl.unbind("SUPER + SHIFT + P")
+-- Paper's desktop entry has an Exec line uwsm can't parse, so run its command directly.
+o.bind("SUPER + SHIFT + P", "Paper", { launch = "/bin/sh -c '/opt/Paper/paper-desktop $(unshare -Ur true 2>/dev/null || echo --no-sandbox)'" })
+o.bind("SUPER + SHIFT + CTRL + P", "PICO-8", { launch = "pico8" })
+
 -- Rebind SUPER+TAB from Quattro's Next workspace binding to last used workspace.
 hl.unbind("SUPER + TAB")
 hl.bind("SUPER + TAB", hl.dsp.focus({ workspace = "previous" }), { description = "Last used workspace" })
 
--- Rebind SUPER+SHIFT+G from Quattro's Signal binding to Google Messages.
+-- Rebind SUPER+SHIFT+G from Quattro's Signal binding to the Grok Bot desktop app.
 hl.unbind("SUPER + SHIFT + G")
-o.bind("SUPER + SHIFT + G", "Google Messages", { webapp = "https://messages.google.com/web/conversations", focus = true })
+o.bind("SUPER + SHIFT + G", "Grok Bot", "uwsm-app -- gtk-launch grok-bot")
 
 -- Restore the S app bindings.
 hl.unbind("SUPER + SHIFT + S")
@@ -140,17 +146,6 @@ o.bind("SHIFT + XF86MonBrightnessDown", "Brightness minimum", "~/.local/bin/omar
 o.bind("ALT + XF86MonBrightnessUp", "Brightness up precise", "~/.local/bin/omarchy-brightness-lowrange +1%", { locked = true, repeating = true })
 o.bind("ALT + XF86MonBrightnessDown", "Brightness down precise", "~/.local/bin/omarchy-brightness-lowrange 1%-", { locked = true, repeating = true })
 
--- CRT scanlines: toggle power without changing the saved Light/Heavy preset.
--- The minus key is the scanline itself.
---
--- SUPER+CTRL+MINUS was Quattro's "Expand window left a lot". It is declared
--- upstream as `code:20` rather than `MINUS`
--- (default/hypr/bindings/tiling.lua), and hl.unbind matches on the literal
--- key spec — unbinding "SUPER + CTRL + MINUS" silently does nothing. Unbind
--- the keycode form to actually clear it.
-hl.unbind("SUPER + CTRL + code:20")
-o.bind("SUPER + CTRL + code:20", "Toggle CRT scanlines", "omarchy-shell -q display-scanlines crt toggle")
-
 -- need new keybindings that do not conflict with Quattro
 -- The old bindings below conflict with current Omarchy Quattro defaults or with
 -- another old binding using the same key. They are preserved here as Lua, but
@@ -180,12 +175,9 @@ o.bind("SUPER + CTRL + code:20", "Toggle CRT scanlines", "omarchy-shell -q displ
 -- SUPER + SHIFT + D conflicts with Quattro: Docker.
 -- o.bind("SUPER + SHIFT + D", "Discord", { webapp = "https://discord.com/channels/@me" })
 
--- SUPER + SHIFT + G was resolved above by unbinding Quattro's Signal binding before adding Google Messages.
+-- SUPER + SHIFT + G was resolved above by unbinding Quattro's Signal binding before adding Grok Bot.
 
 -- SUPER + SHIFT + S was resolved above by unbinding Quattro's Google Maps binding before adding Basecamp.
-
--- SUPER + SHIFT + P conflicts with Quattro: Google Photos.
--- o.bind("SUPER + SHIFT + P", "Immich", { webapp = "http://photos.catknife.com" })
 
 -- SUPER + MINUS conflicts with Quattro: Expand window left.
 -- hl.bind("SUPER + code:20", hl.dsp.window.resize({ x = -50, y = 0, relative = true }), { description = "Expand window left" })
@@ -241,3 +233,10 @@ o.bind("SUPER + ALT + SHIFT + F", "Synchro (cwd)", { omarchy = "synchro-cwd" })
 -- flea --picker: begin. Written by `flea --picker`; `flea --picker off` removes the block whole.
 o.window("com.thisisgm.flea.picker", { tag = "+floating-window" })
 -- flea --picker: end.
+
+-- Dictation keys from before Alt + Space and Right Alt became the defaults.
+-- Remove these lines to give the keys back to applications.
+if o.dictation_installed and o.dictation_installed() then
+  o.bind("SUPER + CTRL + X", "Toggle dictation", "omarchy-dictation toggle")
+  o.bind_hold("F9", "Start dictation (push-to-talk)", "omarchy-dictation start", "Stop dictation (push-to-talk)", "omarchy-dictation stop")
+end

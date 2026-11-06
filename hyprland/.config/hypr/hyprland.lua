@@ -28,6 +28,10 @@ require("default.hypr.toggles")
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
 
+-- VectorCraft draws its canvas tool cursors at double size on 2x scaling.
+-- Use the system cursors instead. Remove once fixed upstream.
+hl.env("VECTORCRAFT_SYSTEM_CURSORS", "1")
+
 -- Open the bound Bitwarden app and btop as standard tiled panes instead of
 -- Omarchy's pre-sized floating windows.
 o.window("^(Bitwarden|org\\.omarchy\\.btop)$", {

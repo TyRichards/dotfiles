@@ -6,7 +6,97 @@
 
 local W = _G.__omarchy_wsl
 if not W then W = { registered = {}, rules = {} }; _G.__omarchy_wsl = W end
+-- Added after the first release: a compositor still running the older
+-- runtime has a W without this table, and reload must not lose its rules.
+W.app_rules = W.app_rules or {}
+W.owned = W.owned or {}
+W.originals = W.originals or {}
 W.specs = {}
+-- workspace -> class -> the places that class wants there. Per workspace,
+-- because the same app pinned to slot 1 of one workspace must not claim
+-- slot 1 of every other workspace it happens to open on.
+W.slots = {}
+W.groups = {}
+
+-- Named workspaces have negative ids in Hyprland. Convert the live object
+-- back to the same selector key used by generated W.set_slot calls.
+local function workspace_key(workspace)
+  if not workspace then return nil end
+  local ok_special, special = pcall(function() return workspace.special end)
+  if ok_special and special then return nil end
+  local ok_id, id = pcall(function() return workspace.id end)
+  local ok_name, name = pcall(function() return workspace.name end)
+  if ok_id and id and tonumber(id) and tonumber(id) < 0 and ok_name and name and name ~= "" then
+    return "name:" .. tostring(name)
+  end
+  if ok_id and id then return tostring(id) end
+  if ok_name and name and name ~= "" then return "name:" .. tostring(name) end
+  return nil
+end
+
+-- Disable the old follow hook during a live upgrade.
+W.follow_window = function() end
+
+local function compatible_group(group, class)
+  if not group then return true end
+  if group.locked or group.denied then return false end
+  for _, member in ipairs(group.members or {}) do
+    if member.class ~= class then return false end
+  end
+  return true
+end
+
+function W.group_app(ws, class)
+  if not W.groups[ws] or not W.groups[ws][class] or W.grouping then return end
+  if not hl.dsp.group or type(hl.dsp.group.toggle) ~= "function" then return end
+  W.grouping = true
+  local ok, err = pcall(function()
+    local windows, group = {}, nil
+    for _, win in ipairs(hl.get_windows({ class = class })) do
+      if win.mapped and not win.floating and workspace_key(win.workspace) == ws
+          and compatible_group(win.group, class) then
+        windows[#windows + 1] = win
+        if win.group then group = win.group end
+      end
+    end
+    if #windows == 0 then return end
+    if not group then
+      hl.dispatch(hl.dsp.group.toggle({ window = windows[1] }))
+      group = windows[1].group
+    end
+    if not group or type(group.add) ~= "function" then return end
+    for _, win in ipairs(windows) do
+      if win.group ~= group then group:add(win) end
+    end
+  end)
+  W.grouping = false
+  if not ok then error(err, 0) end
+end
+
+function W.set_group(ws, class)
+  W.groups[ws] = W.groups[ws] or {}
+  W.groups[ws][class] = true
+end
+
+function W.restore_groups()
+  for ws, classes in pairs(W.groups) do
+    for class in pairs(classes) do W.group_app(ws, class) end
+  end
+end
+
+function W.start_groups()
+  for _, subscription in ipairs(W.group_subscriptions or {}) do
+    pcall(function() subscription:remove() end)
+  end
+  W.group_subscriptions = {}
+  if next(W.groups) and type(hl.on) == "function" then
+    local function opened(win)
+      if win and win.workspace then W.group_app(workspace_key(win.workspace), win.class) end
+    end
+    W.group_subscriptions = { hl.on("window.open", opened), hl.on("window.class", opened) }
+  end
+  W.restore_groups()
+end
 
 local function normalize(weights)
   local total = 0
@@ -17,6 +107,32 @@ local function normalize(weights)
     return out
   end
   for i = 1, #weights do out[i] = weights[i] * 100 / total end
+  return out
+end
+
+-- A part is either a plain cross weight or a table saying how wide it is and
+-- how it is cut along the grain again.
+local function part_weight(part)
+  if type(part) == "table" then return part.weight end
+  return part
+end
+
+local function part_split(part)
+  if type(part) == "table" and part.parts then return part.parts end
+  return {}
+end
+
+local function part_pieces(part)
+  local split = part_split(part)
+  if #split > 1 then return #split end
+  return 1
+end
+
+-- Even parts for a slot: what overflow stacking falls back to when it adds
+-- parts to a slot whose ratio was drawn for fewer of them.
+local function even_cell(count)
+  local out = {}
+  for i = 1, count do out[i] = 100 / count end
   return out
 end
 
@@ -63,25 +179,39 @@ end
 
 local function ratio_rects(spec, n)
   local weights = spec.weights
+  local counts = spec.cells
   local k = #weights
-  local primary = {}
-  local stack_at, stack_count = -1, 0
+  local primary, subs = {}, {}
+  local base = 0
+  for i = 1, k do
+    for j = 1, #counts[i] do base = base + part_pieces(counts[i][j]) end
+  end
+  -- A layout with a split slot was drawn in two dimensions and holds: there
+  -- is no sensible way to grow one of its halves into the missing window.
+  local split = base > k
 
-  if n <= k and spec.underfill == "hold" then
-    for i = 1, k do primary[i] = weights[i] end
-  elseif n <= k then
+  if n <= base and (spec.underfill == "hold" or split) then
+    for i = 1, k do primary[i] = weights[i]; subs[i] = counts[i] end
+  elseif n <= base then
     local chosen = {}
     local priority = fill_order(weights)
     for i = 1, n do chosen[i] = priority[i] end
     table.sort(chosen)
-    for i = 1, n do primary[i] = weights[chosen[i]] end
+    for i = 1, n do primary[i] = weights[chosen[i]]; subs[i] = { 100 } end
   elseif spec.overflow == "extend" then
-    for i = 1, k do primary[i] = weights[i] end
-    for i = k + 1, n do primary[i] = weights[k] end
+    for i = 1, k do primary[i] = weights[i]; subs[i] = counts[i] end
+    local grown = base
+    while grown < n do
+      primary[#primary + 1] = weights[k]
+      subs[#subs + 1] = { 100 }
+      grown = grown + 1
+    end
   else
-    for i = 1, k do primary[i] = weights[i] end
-    stack_at = (spec.overflow == "first") and 1 or k
-    stack_count = n - k + 1
+    for i = 1, k do primary[i] = weights[i]; subs[i] = counts[i] end
+    local at = (spec.overflow == "first") and 1 or k
+    local held = 0
+    for i = 1, #subs[at] do held = held + part_pieces(subs[at][i]) end
+    subs[at] = even_cell(held + n - base)
   end
 
   primary = normalize(primary)
@@ -91,16 +221,31 @@ local function ratio_rects(spec, n)
   for slot = 1, #primary do
     local size = primary[slot] / 100
     if slot == #primary then size = 1 - offset end
-    if slot == stack_at then
-      for s = 0, stack_count - 1 do
-        local sub_offset = s / stack_count
-        local sub_size = (s == stack_count - 1) and (1 - sub_offset) or (1 / stack_count)
-        cells[#cells + 1] = orient(spec.orientation, offset, size, sub_offset, sub_size)
+    local list = subs[slot]
+    local weights_of = {}
+    for s = 1, #list do weights_of[s] = part_weight(list[s]) end
+    local parts = normalize(weights_of)
+    local crossed = 0
+    for s = 1, #parts do
+      local sub_size = parts[s] / 100
+      if s == #parts then sub_size = 1 - crossed end
+      local split = part_split(list[s])
+      if #split > 1 then
+        -- The part is cut again, back along the grain.
+        local inner = normalize(split)
+        local run = 0
+        for q = 1, #inner do
+          local inner_size = size * inner[q] / 100
+          if q == #inner then inner_size = size - run end
+          cells[#cells + 1] = orient(spec.orientation, offset + run, inner_size, crossed, sub_size)
+          cell_slot[#cell_slot + 1] = slot
+          run = run + inner_size
+        end
+      else
+        cells[#cells + 1] = orient(spec.orientation, offset, size, crossed, sub_size)
         cell_slot[#cell_slot + 1] = slot
       end
-    else
-      cells[#cells + 1] = orient(spec.orientation, offset, size, 0, 1)
-      cell_slot[#cell_slot + 1] = slot
+      crossed = crossed + sub_size
     end
     offset = offset + size
   end
@@ -131,6 +276,52 @@ function W.rects(spec, n)
   return ratio_rects(spec, n)
 end
 
+-- Which rect each window takes. W.rects hands them back in fill order —
+-- the same order the canvas numbers its slots — so a targeted class is
+-- simply an index into that list, and everyone else keeps the order
+-- Hyprland handed them in, filling whatever is left.
+--
+-- A class holds a *list* of slots, so a second window of the same app takes
+-- the next place on its list rather than fighting the first for one.
+--
+-- A slot nobody can have right now (a 3 with two windows open) is skipped
+-- rather than held empty: the window falls back to its normal place.
+function W.assign(targets, n)
+  local out, taken = {}, {}
+  for i = 1, n do
+    local win = targets[i].window
+    local wants = nil
+    if win then
+      local ok, class = pcall(function() return win.class end)
+      local fine, workspace = pcall(function() return win.workspace end)
+      local ws = fine and workspace_key(workspace) or nil
+      if ok and class and ws then
+        local here = W.slots[ws]
+        if here then wants = here[class] end
+      end
+    end
+    if wants then
+      for k = 1, #wants do
+        local want = wants[k]
+        if want >= 1 and want <= n and not taken[want] then
+          out[i] = want
+          taken[want] = true
+          break
+        end
+      end
+    end
+  end
+  local free = 1
+  for i = 1, n do
+    if not out[i] then
+      while taken[free] do free = free + 1 end
+      out[i] = free
+      taken[free] = true
+    end
+  end
+  return out
+end
+
 -- Convert fractions to pixels by rounding the *edges*, not the sizes, so
 -- neighbouring windows always share an exact boundary and no seam of dead
 -- pixels opens up between them.
@@ -141,8 +332,9 @@ function W.place(id, ctx)
   if not spec then return end
   local a = ctx.area
   local rects = W.rects(spec, n)
+  local pick = W.assign(ctx.targets, n)
   for i = 1, n do
-    local r = rects[i]
+    local r = rects[pick[i]]
     if r then
       local x0 = math.floor(a.w * r[1] + 0.5)
       local y0 = math.floor(a.h * r[2] + 0.5)
@@ -170,31 +362,104 @@ function W.register(id)
   })
 end
 
--- Workspace rules accumulate: adding a second rule for a workspace does not
--- retire the first. Keep the handle so the previous rule can be disabled,
--- otherwise switching profiles would pile up dead rules that still win.
+-- Workspace rules are keyed by selector. Reissuing the same selector updates
+-- the existing rule in place, preserving fields such as monitor, persistent,
+-- and enabled.
+local function live_workspace(ws)
+  local ok, live = pcall(function() return hl.get_workspace(ws) end)
+  return ok and live or nil
+end
+
+function W.begin_workspaces()
+  W.seen = {}
+end
+
 function W.set_workspace(ws, layout)
-  local previous = W.rules[ws]
-  if previous then pcall(function() previous:set_enabled(false) end) end
+  W.seen = W.seen or {}
+  W.seen[ws] = true
+  if ws:sub(1, 5) == "name:" then
+    local live = live_workspace(ws)
+    local saved = live and W.originals[live.id] or nil
+    local old = W.owned[ws]
+    local original = saved and saved.workspace == live and saved.layout
+      or (old and old.previous) or (live and live.tiled_layout)
+    if not original then
+      local ok, fallback = pcall(function() return hl.get_config("general.layout") end)
+      original = ok and fallback or "dwindle"
+    end
+    W.owned[ws] = { layout = layout, previous = original, workspace = live }
+    if live then W.originals[live.id] = { workspace = live, layout = original } end
+  end
   W.rules[ws] = hl.workspace_rule({ workspace = ws, layout = layout })
+end
+
+function W.finish_workspaces()
+  for ws, owned in pairs(W.owned) do
+    if not W.seen[ws] then
+      local live = live_workspace(ws)
+      if not live or live.tiled_layout == owned.layout then
+        hl.workspace_rule({ workspace = ws, layout = owned.previous })
+      end
+      W.owned[ws] = nil
+      W.rules[ws] = nil
+    end
+  end
+  for id, original in pairs(W.originals) do
+    local claimed = false
+    for _, owned in pairs(W.owned) do
+      if owned.workspace == original.workspace then claimed = true; break end
+    end
+    if not claimed then W.originals[id] = nil end
+  end
+end
+
+-- App pins, as window rules. Unlike a workspace rule there is no fixed set
+-- of keys to overwrite — a pin the user deleted simply is not in the new
+-- file — so every rule this plugin owns is retired before the current set
+-- is installed, and the table is rebuilt from scratch.
+function W.reset_apps()
+  for _, rule in pairs(W.app_rules) do
+    pcall(function() rule:set_enabled(false) end)
+  end
+  W.app_rules = {}
+end
+
+-- Window rules place apps silently. An explicit launch can focus its workspace first.
+function W.set_slot(ws, class, slots)
+  if not W.slots[ws] then W.slots[ws] = {} end
+  W.slots[ws][class] = slots
+end
+
+function W.set_app(match, pattern, ws)
+  W.app_rules[match] = hl.window_rule({
+    name = "omarchy-wsl-pin-" .. match,
+    match = { class = pattern },
+    workspace = ws .. " silent",
+  })
 end
 
 -- Nothing re-tiles a workspace just because its spec changed, so ask the
 -- active layout to lay itself out again. Errors on a workspace running a
 -- built-in layout, which has no idea what this message means.
 function W.relayout()
-  pcall(function() hl.dispatch(hl.dsp.layout("relayout")) end)
+  pcall(function()
+    local ws = hl.get_active_workspace()
+    local layout = ws and ws.tiled_layout or ""
+    if layout:sub(1, 16) == "lua:omarchy-wsl-" then
+      hl.dispatch(hl.dsp.layout("relayout"))
+    end
+  end)
 end
 
-W.specs["even"] = { kind = "ratio", orientation = "columns", overflow = "extend", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 50, 50 } }
-W.specs["focus"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "hold", grid_columns = 0, weights = { 25, 50, 25 } }
-W.specs["main"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 60, 40 } }
-W.specs["main-right"] = { kind = "ratio", orientation = "columns", overflow = "first", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 40, 60 } }
-W.specs["golden"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 61.8, 38.2 } }
-W.specs["thirds"] = { kind = "ratio", orientation = "columns", overflow = "extend", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 33.34, 33.33, 33.33 } }
-W.specs["wide-centre"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "hold", grid_columns = 0, weights = { 20, 60, 20 } }
-W.specs["stacked"] = { kind = "ratio", orientation = "rows", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 50, 50 } }
-W.specs["grid"] = { kind = "grid", orientation = "columns", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, weights = { 50, 50 } }
+W.specs["even"] = { kind = "ratio", orientation = "columns", overflow = "extend", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 } }, weights = { 50, 50 } }
+W.specs["focus"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "hold", grid_columns = 0, cells = { { 100 }, { 100 }, { 100 } }, weights = { 25, 50, 25 } }
+W.specs["main"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 } }, weights = { 60, 40 } }
+W.specs["main-right"] = { kind = "ratio", orientation = "columns", overflow = "first", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 } }, weights = { 40, 60 } }
+W.specs["golden"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 } }, weights = { 61.8, 38.2 } }
+W.specs["thirds"] = { kind = "ratio", orientation = "columns", overflow = "extend", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 }, { 100 } }, weights = { 33.34, 33.33, 33.33 } }
+W.specs["wide-centre"] = { kind = "ratio", orientation = "columns", overflow = "last", fill = "largest", underfill = "hold", grid_columns = 0, cells = { { 100 }, { 100 }, { 100 } }, weights = { 20, 60, 20 } }
+W.specs["stacked"] = { kind = "ratio", orientation = "rows", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 } }, weights = { 50, 50 } }
+W.specs["grid"] = { kind = "grid", orientation = "columns", overflow = "last", fill = "largest", underfill = "rescale", grid_columns = 0, cells = { { 100 }, { 100 } }, weights = { 50, 50 } }
 
 W.register("even")
 W.register("focus")
@@ -206,13 +471,19 @@ W.register("wide-centre")
 W.register("stacked")
 W.register("grid")
 
+W.begin_workspaces()
 W.set_workspace("1", "dwindle")
 W.set_workspace("2", "dwindle")
-W.set_workspace("3", "dwindle")
-W.set_workspace("4", "dwindle")
-W.set_workspace("5", "lua:omarchy-wsl-even")
+W.set_workspace("3", "scrolling")
+W.set_workspace("4", "scrolling")
+W.set_workspace("5", "lua:omarchy-wsl-thirds")
 W.set_workspace("6", "dwindle")
 W.set_workspace("7", "dwindle")
-W.set_workspace("8", "dwindle")
-W.set_workspace("9", "dwindle")
+W.set_workspace("8", "scrolling")
+W.set_workspace("9", "scrolling")
 W.set_workspace("10", "dwindle")
+W.finish_workspaces()
+
+W.reset_apps()
+W.start_groups()
+W.relayout()

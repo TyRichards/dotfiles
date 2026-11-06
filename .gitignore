@@ -8,6 +8,9 @@ bash/.bashrc
 __pycache__/
 *.py[cod]
 
+# Private browser bookmarks from the backup archive
+brave/.config/BraveSoftware/Brave-Browser/Default/Bookmarks
+
 # Cliamp local Jellyfin credentials, history URLs, and runtime files
 cliamp/.config/cliamp/config.toml
 cliamp/.config/cliamp/history.toml

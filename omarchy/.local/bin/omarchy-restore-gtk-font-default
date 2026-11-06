@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+# Reapply Omarchy's 9pt GTK font after an update without changing the
+# selected font family or GNOME's text-scaling factor.
+font=$(gsettings get org.gnome.desktop.interface font-name)
+if [[ $font =~ ^\'(.+)[[:space:]][0-9]+(\.[0-9]+)?\'$ ]]; then
+  gsettings set org.gnome.desktop.interface font-name "${BASH_REMATCH[1]} 9"
+else
+  printf 'Cannot parse GNOME interface font: %s\n' "$font" >&2
+  exit 1
+fi

@@ -3,15 +3,16 @@ onboarding = false
 # tmux session -> herdr workspace, tmux window -> herdr tab, tmux pane -> herdr pane
 
 [theme]
-# tmux ran on the terminal's own palette (bg=default, fg=default, ANSI blue accents)
+# Follow the terminal's palette (Framework maps ANSI cyan to its orange accent).
 name = "terminal"
 
 # 2025 Settings ################
 # auto_switch = false
 
 [theme.custom]
-# The active tab is drawn as panel_bg text on an accent background, so panel_bg
-# has to be dark for it to read - same colors as status-left's "#[fg=black,bg=blue]"
+# The focused shared pane divider and other highlights use ANSI cyan,
+# which Framework maps to orange. Keep active-tab text readable on this accent.
+accent = "cyan"
 panel_bg = "black"
 
 # 2025 Settings ################
@@ -108,8 +109,6 @@ type = "shell"
 command = "herdr pane swap --direction right"
 
 [ui]
-accent = "blue"
-
 # tmux drew single-line dividers between adjacent panes and no outer frame
 pane_gaps = false
 pane_outer_borders = false
@@ -165,3 +164,6 @@ status_indicators = "symbols"
 # qodercli = "on"
 # maki = "on"
 agent_panel_sort = "priority"
+
+[ui.sound]
+enabled = false

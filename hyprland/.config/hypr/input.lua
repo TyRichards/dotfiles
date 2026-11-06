@@ -68,7 +68,8 @@ hl.config({
       natural_scroll = true,
       clickfinger_behavior = true,
       scroll_factor = 0.25,
-      disable_while_typing = true,
+      -- Off while diagnosing the touchpad losing the cursor after unlock (2026-10-05).
+      disable_while_typing = false,
     },
   },
 })
@@ -81,5 +82,12 @@ o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })
 hl.device({
   name = "ty_magic_mouse",
   sensitivity = -0.9,
+  scroll_factor = 2.0,
+})
+
+-- Logitech Pebble Mouse settings.
+hl.device({
+  name = "logitech-pebble-mouse",
+  sensitivity = -0.75,
   scroll_factor = 2.0,
 })
